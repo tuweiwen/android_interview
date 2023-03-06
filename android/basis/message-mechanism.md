@@ -37,21 +37,21 @@ public class Activity extends android.app.Activity {
 
 消息机制主要包含：MessageQueue，Handler和Looper这三大部分，以及Message，下面我们一一介绍。
 
-**Message：**需要传递的消息，可以传递数据；
+**Message：** 需要传递的消息，可以传递数据；
 
-**MessageQueue：**消息队列，但是它的内部实现并不是用的队列，实际上是通过一个单链表的数据结构来维护消息列表，因为单链表在插入和删除上比较有优势。主要功能向消息池投递消息\(MessageQueue.enqueueMessage\)和取走消息池的消息\(MessageQueue.next\)；
+**MessageQueue：** 消息队列，但是它的内部实现并不是用的队列，实际上是通过一个单链表的数据结构来维护消息列表，因为单链表在插入和删除上比较有优势。主要功能向消息池投递消息\(MessageQueue.enqueueMessage\)和取走消息池的消息\(MessageQueue.next\)；
 
-**Handler：**消息辅助类，主要功能向消息池发送各种消息事件\(Handler.sendMessage\)和处理相应消息事件\(Handler.handleMessage\)；
+**Handler：** 消息辅助类，主要功能向消息池发送各种消息事件\(Handler.sendMessage\)和处理相应消息事件\(Handler.handleMessage\)；
 
-**Looper：**不断循环执行\(Looper.loop\)，从MessageQueue中读取消息，按分发机制将消息分发给目标处理者。
+**Looper：** 不断循环执行\(Looper.loop\)，从MessageQueue中读取消息，按分发机制将消息分发给目标处理者。
 
 ##### 3.消息机制的架构
 
-**消息机制的运行流程：**在子线程执行完耗时操作，当Handler发送消息时，将会调用`MessageQueue.enqueueMessage`，向消息队列中添加消息。当通过`Looper.loop`开启循环后，会不断地从线程池中读取消息，即调用`MessageQueue.next`，然后调用目标Handler（即发送该消息的Handler）的`dispatchMessage`方法传递消息，然后返回到Handler所在线程，目标Handler收到消息，调用`handleMessage`方法，接收消息，处理消息。
+**消息机制的运行流程：** 在子线程执行完耗时操作，当Handler发送消息时，将会调用`MessageQueue.enqueueMessage`，向消息队列中添加消息。当通过`Looper.loop`开启循环后，会不断地从线程池中读取消息，即调用`MessageQueue.next`，然后调用目标Handler（即发送该消息的Handler）的`dispatchMessage`方法传递消息，然后返回到Handler所在线程，目标Handler收到消息，调用`handleMessage`方法，接收消息，处理消息。
 
 ![](http://upload-images.jianshu.io/upload_images/3985563-d7da4f5ba49f6887.png?imageMogr2/auto-orient/strip|imageView2/2/w/1240)
 
-**MessageQueue，Handler和Looper三者之间的关系：**每个线程中只能存在一个Looper，Looper是保存在ThreadLocal中的。主线程（UI线程）已经创建了一个Looper，所以在主线程中不需要再创建Looper，但是在其他线程中需要创建Looper。每个线程中可以有多个Handler，即一个Looper可以处理来自多个Handler的消息。 Looper中维护一个MessageQueue，来维护消息队列，消息队列中的Message可以来自不同的Handler。
+**MessageQueue，Handler和Looper三者之间的关系：** 每个线程中只能存在一个Looper，Looper是保存在ThreadLocal中的。主线程（UI线程）已经创建了一个Looper，所以在主线程中不需要再创建Looper，但是在其他线程中需要创建Looper。每个线程中可以有多个Handler，即一个Looper可以处理来自多个Handler的消息。 Looper中维护一个MessageQueue，来维护消息队列，消息队列中的Message可以来自不同的Handler。
 
 ![](http://upload-images.jianshu.io/upload_images/3985563-88a27b5906166c63.png?imageMogr2/auto-orient/strip|imageView2/2/w/1240)
 
@@ -60,33 +60,35 @@ public class Activity extends android.app.Activity {
 ![](http://upload-images.jianshu.io/upload_images/3985563-6c25004471646c1f.png?imageMogr2/auto-orient/strip|imageView2/2/w/1240)
 
 从中我们可以看出：  
-Looper有一个MessageQueue消息队列；  
-MessageQueue有一组待处理的Message；  
-Message中记录发送和处理消息的Handler；  
-Handler中有Looper和MessageQueue。
+- Looper有一个MessageQueue消息队列；  
+- MessageQueue有一组待处理的Message；  
+- Message中记录发送和处理消息的Handler；  
+- Handler中有Looper和MessageQueue。
 
 ### 二、消息机制的源码解析
 
 ##### 1.Looper
 
 要想使用消息机制，首先要创建一个Looper。  
+
 **初始化Looper**  
 无参情况下，默认调用`prepare(true);`表示的是这个Looper可以退出，而对于false的情况则表示当前Looper不可以退出。。
 
 ```java
- public static void prepare() {
-        prepare(true);
-    }
+public static void prepare() {
+    prepare(true);
+}
 
-    private static void prepare(boolean quitAllowed) {
-        if (sThreadLocal.get() != null) {
-            throw new RuntimeException("Only one Looper may be created per thread");
-        }
-        sThreadLocal.set(new Looper(quitAllowed));
+private static void prepare(boolean quitAllowed) {
+    if (sThreadLocal.get() != null) {
+        throw new RuntimeException("Only one Looper may be created per thread");
     }
+    sThreadLocal.set(new Looper(quitAllowed));
+}
 ```
 
 这里看出，不能重复创建Looper，只能创建一个。创建Looper,并保存在ThreadLocal。其中ThreadLocal是线程本地存储区（Thread Local Storage，简称为TLS），每个线程都有自己的私有的本地存储区域，不同线程之间彼此不能访问对方的TLS区域。  
+
 **开启Looper**
 
 ```java
@@ -131,20 +133,19 @@ loop\(\)进入循环模式，不断重复下面的操作，直到消息为空时
 
 **当next\(\)取出下一条消息时，队列中已经没有消息时，next\(\)会无限循环，产生阻塞。等待MessageQueue中加入消息，然后重新唤醒。**
 
-**主线程中不需要自己创建Looper，这是由于在程序启动的时候，系统已经帮我们自动调用了**`Looper.prepare()`**方法。查看ActivityThread中的**`main()`**方法，代码如下所示：**
+**主线程中不需要自己创建Looper，这是由于在程序启动的时候，系统已经帮我们自动调用了 **`Looper.prepare()`** 方法。查看ActivityThread中的 **`main()`** 方法，代码如下所示：**
 
 ```java
-  public static void main(String[] args) {
-..........................
-        Looper.prepareMainLooper();
-  ..........................
-        Looper.loop();
-  ..........................
-
-    }
+public static void main(String[] args) {
+    ..........................
+    Looper.prepareMainLooper();
+    ..........................
+    Looper.loop();
+    ..........................
+}
 ```
 
-其中```prepareMainLooper()``方法会调用`prepare(false)`方法。
+其中`prepareMainLooper()`方法会调用`prepare(false)`方法。
 
 ###### 2.Handler
 
@@ -156,7 +157,7 @@ public Handler() {
 }
 
 public Handler(Callback callback, boolean async) {
-   .................................
+    .................................
     //必须先执行Looper.prepare()，才能获取Looper对象，否则为null.
     mLooper = Looper.myLooper();  //从当前线程的TLS中获取Looper对象
     if (mLooper == null) {
@@ -179,84 +180,77 @@ public Handler(Callback callback, boolean async) {
 **post方法**
 
 ```java
- public final boolean post(Runnable r)
-    {
-       return  sendMessageDelayed(getPostMessage(r), 0);
-    }
-public final boolean postAtTime(Runnable r, long uptimeMillis)
-    {
-        return sendMessageAtTime(getPostMessage(r), uptimeMillis);
-    }
- public final boolean postAtTime(Runnable r, Object token, long uptimeMillis)
-    {
-        return sendMessageAtTime(getPostMessage(r, token), uptimeMillis);
-    }
- public final boolean postDelayed(Runnable r, long delayMillis)
-    {
-        return sendMessageDelayed(getPostMessage(r), delayMillis);
-    }
+public final boolean post(Runnable r) {
+    return sendMessageDelayed(getPostMessage(r), 0);
+}
+public final boolean postAtTime(Runnable r, long uptimeMillis) {
+    return sendMessageAtTime(getPostMessage(r), uptimeMillis);
+}
+public final boolean postAtTime(Runnable r, Object token, long uptimeMillis){
+    return sendMessageAtTime(getPostMessage(r, token), uptimeMillis);
+}
+public final boolean postDelayed(Runnable r, long delayMillis) {
+    return sendMessageDelayed(getPostMessage(r), delayMillis);
+}
 ```
 
 **send方法**
 
 ```java
-public final boolean sendMessage(Message msg)
-    {
-        return sendMessageDelayed(msg, 0);
-    }
- public final boolean sendEmptyMessage(int what)
-    {
-        return sendEmptyMessageDelayed(what, 0);
-    } 
+public final boolean sendMessage(Message msg) {
+    return sendMessageDelayed(msg, 0);
+}
+public final boolean sendEmptyMessage(int what) {
+    return sendEmptyMessageDelayed(what, 0);
+} 
 public final boolean sendEmptyMessageDelayed(int what, long delayMillis) {
-        Message msg = Message.obtain();
-        msg.what = what;
-        return sendMessageDelayed(msg, delayMillis);
+    Message msg = Message.obtain();
+    msg.what = what;
+    return sendMessageDelayed(msg, delayMillis);
+}
+public final boolean sendEmptyMessageAtTime(int what, long uptimeMillis) {
+    Message msg = Message.obtain();
+    msg.what = what;
+    return sendMessageAtTime(msg, uptimeMillis);
+}
+public final boolean sendMessageDelayed(Message msg, long delayMillis) {
+    if (delayMillis < 0) {
+        delayMillis = 0;
     }
- public final boolean sendEmptyMessageAtTime(int what, long uptimeMillis) {
-        Message msg = Message.obtain();
-        msg.what = what;
-        return sendMessageAtTime(msg, uptimeMillis);
-    }
- public final boolean sendMessageDelayed(Message msg, long delayMillis)
-    {
-        if (delayMillis < 0) {
-            delayMillis = 0;
-        }
-        return sendMessageAtTime(msg, SystemClock.uptimeMillis() + delayMillis);
-    }
+    return sendMessageAtTime(msg, SystemClock.uptimeMillis() + delayMillis);
+}
 ```
 
 就连子线程中调用Activity中的runOnUiThread\(\)中更新UI，其实也是发送消息通知主线程更新UI，最终也会调用`sendMessageAtTime()`方法。
 
 ```java
- public final void runOnUiThread(Runnable action) {
-        if (Thread.currentThread() != mUiThread) {
-            mHandler.post(action);
-        } else {
-            action.run();
-        }
+public final void runOnUiThread(Runnable action) {
+    if (Thread.currentThread() != mUiThread) {
+        mHandler.post(action);
+    } else {
+        action.run();
     }
+}
 ```
 
 如果当前的线程不等于UI线程\(主线程\)，就去调用Handler的post\(\)方法，最终会调用`sendMessageAtTime()`方法。否则就直接调用Runnable对象的run\(\)方法。
 
 下面我们就来一探究竟，到底`sendMessageAtTime()`方法有什么作用？  
-**sendMessageAtTime\(\)**
 
+**sendMessageAtTime\(\)**
 ```java
- public boolean sendMessageAtTime(Message msg, long uptimeMillis) {
-       //其中mQueue是消息队列，从Looper中获取的
-        MessageQueue queue = mQueue;
-        if (queue == null) {
-            RuntimeException e = new RuntimeException(
-                    this + " sendMessageAtTime() called with no mQueue");
-            Log.w("Looper", e.getMessage(), e);
-            return false;
-        }
-        //调用enqueueMessage方法
-        return enqueueMessage(queue, msg, uptimeMillis);
+public boolean sendMessageAtTime(Message msg, long uptimeMillis) {
+    //其中mQueue是消息队列，从Looper中获取的
+    MessageQueue queue = mQueue;
+    if (queue == null) {
+        RuntimeException e = new RuntimeException(
+                this + " sendMessageAtTime() called with no mQueue");
+        Log.w("Looper", e.getMessage(), e);
+        return false;
     }
+    //调用enqueueMessage方法
+    return enqueueMessage(queue, msg, uptimeMillis);
+}
 ```
 
 ```java
@@ -270,10 +264,11 @@ public final boolean sendEmptyMessageDelayed(int what, long delayMillis) {
     }
 ```
 
-可以看到sendMessageAtTime\(\)\`方法的作用很简单，就是调用MessageQueue的enqueueMessage\(\)方法，往消息队列中添加一个消息。  
-下面来看enqueueMessage\(\)方法的具体执行逻辑。  
-**enqueueMessage\(\)**
+可以看到sendMessageAtTime\(\)方法的作用很简单，就是调用MessageQueue的enqueueMessage\(\)方法，往消息队列中添加一个消息。
 
+下面来看enqueueMessage\(\)方法的具体执行逻辑。  
+
+**enqueueMessage\(\)**
 ```java
 boolean enqueueMessage(Message msg, long when) {
     // 每一个Message必须有一个target
@@ -327,9 +322,9 @@ MessageQueue是按照Message触发时间的先后顺序排列的，队头的消�
 
 ##### 4.获取消息
 
-当发送了消息后，在MessageQueue维护了消息队列，然后在Looper中通过`loop()`方法，不断地获取消息。上面对`loop()`方法进行了介绍，其中最重要的是调用了`queue.next()`方法,通过该方法来提取下一条信息。下面我们来看一下`next()`方法的具体流程。  
-**next\(\)**
+当发送了消息后，在MessageQueue维护了消息队列，然后在Looper中通过`loop()`方法，不断地获取消息。上面对`loop()`方法进行了介绍，其中最重要的是调用了`queue.next()`方法,通过该方法来提取下一条信息。下面我们来看一下`next()`方法的具体流程。
 
+**next\(\)**
 ```java
 Message next() {
     final long ptr = mPtr;
@@ -376,7 +371,7 @@ Message next() {
                 //没有消息
                 nextPollTimeoutMillis = -1;
             }
-         //消息正在退出，返回null
+            //消息正在退出，返回null
             if (mQuitting) {
                 dispose();
                 return null;
@@ -387,7 +382,7 @@ Message next() {
 ```
 
 nativePollOnce是阻塞操作，其中nextPollTimeoutMillis代表下一个消息到来前，还需要等待的时长；当nextPollTimeoutMillis = -1时，表示消息队列中无消息，会一直等待下去。  
-可以看出`next()`方法根据消息的触发时间，获取下一条需要执行的消息,队列中消息为空时，则会进行阻塞操作。
+可以看出`next()`方法根据消息的触发时间，获取下一条需要执行的消息；队列中消息为空时，则会进行阻塞操作。
 
 ##### 5.分发消息
 
@@ -415,8 +410,8 @@ public void dispatchMessage(Message msg) {
 
 ```java
 private static void handleCallback(Message message) {
-        message.callback.run();
-    }
+    message.callback.run();
+}
 ```
 
 **分发消息流程：**  
