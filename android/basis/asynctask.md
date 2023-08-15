@@ -1,10 +1,10 @@
 ## 一、Android中的线程
 
-在操作系统中，线程是操作系统调度的最小单元，同时线程又是一种受限的系统资源，即线程不可能无限制地产生，并且**线程的创建和销毁都会有相应的开销。**当系统中存在大量的线程时，系统会通过会时间片轮转的方式调度每个线程，因此线程不可能做到绝对的并行。
+在操作系统中，线程是操作系统调度的最小单元，同时线程又是一种受限的系统资源，即线程不可能无限制地产生，并且 **线程的创建和销毁都会有相应的开销。** 当系统中存在大量的线程时，系统会通过会时间片轮转的方式调度每个线程，因此线程不可能做到绝对的并行。
 
 如果在一个进程中频繁地创建和销毁线程，显然不是高效的做法。正确的做法是采用线程池，一个线程池中会缓存一定数量的线程，通过线程池就可以避免因为频繁创建和销毁线程所带来的系统开销。
 
-## 二、AsyncTask简介
+## 二、AsyncTask简介(deprecated in sdk30)
 
 AsyncTask是一个抽象类，它是由Android封装的一个轻量级异步类（轻量体现在使用方便、代码简洁），它可以在线程池中执行后台任务，然后把执行的进度和最终结果传递给主线程并在主线程中更新UI。
 
@@ -24,11 +24,11 @@ AsyncTask是一个抽象泛型类。
 
 其中，三个泛型类型参数的含义如下：
 
-**Params：**开始异步任务执行时传入的参数类型；
+**Params：** 开始异步任务执行时传入的参数类型；
 
-**Progress：**异步任务执行过程中，返回下载进度值的类型；
+**Progress：** 异步任务执行过程中，返回下载进度值的类型；
 
-**Result：**异步任务执行完成后，返回的结果类型；
+**Result：** 异步任务执行完成后，返回的结果类型；
 
 **如果AsyncTask确定不需要传递具体参数，那么这三个泛型参数可以用Void来代替。**
 
@@ -38,11 +38,11 @@ AsyncTask是一个抽象泛型类。
 
 **onPreExecute()**
 
-这个方法会在**后台任务开始执行之间调用，在主线程执行。**用于进行一些界面上的初始化操作，比如显示一个进度条对话框等。
+这个方法会在 **后台任务开始执行之间调用，在主线程执行。** 用于进行一些界面上的初始化操作，比如显示一个进度条对话框等。
 
 **doInBackground(Params...)**
 
-这个方法中的所有代码都会**在子线程中运行，我们应该在这里去处理所有的耗时任务。**
+这个方法中的所有代码都会 **在子线程中运行，我们应该在这里去处理所有的耗时任务。**
 
 任务一旦完成就可以通过return语句来将任务的执行结果进行返回，如果AsyncTask的第三个泛型参数指定的是Void，就可以不返回任务执行结果。**注意，在这个方法中是不可以进行UI操作的，如果需要更新UI元素，比如说反馈当前任务的执行进度，可以调用publishProgress(Progress...)方法来完成。**
 
@@ -128,41 +128,41 @@ new DownloadTask().execute();
 
 ```java
 public AsyncTask() {
-        mWorker = new WorkerRunnable<Params, Result>() {
-            public Result call() throws Exception {
-                mTaskInvoked.set(true);
-                Result result = null;
-                try {
-                    Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-                    //noinspection unchecked
-                    result = doInBackground(mParams);
-                    Binder.flushPendingCommands();
-                } catch (Throwable tr) {
-                    mCancelled.set(true);
-                    throw tr;
-                } finally {
-                    postResult(result);
-                }
-                return result;
+    mWorker = new WorkerRunnable<Params, Result>() {
+        public Result call() throws Exception {
+            mTaskInvoked.set(true);
+            Result result = null;
+            try {
+                Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+                //noinspection unchecked
+                result = doInBackground(mParams);
+                Binder.flushPendingCommands();
+            } catch (Throwable tr) {
+                mCancelled.set(true);
+                throw tr;
+            } finally {
+                postResult(result);
             }
-        };
+            return result;
+        }
+    };
 
-        mFuture = new FutureTask<Result>(mWorker) {
-            @Override
-            protected void done() {
-                try {
-                    postResultIfNotInvoked(get());
-                } catch (InterruptedException e) {
-                    android.util.Log.w(LOG_TAG, e);
-                } catch (ExecutionException e) {
-                    throw new RuntimeException("An error occurred while executing doInBackground()",
-                            e.getCause());
-                } catch (CancellationException e) {
-                    postResultIfNotInvoked(null);
-                }
+    mFuture = new FutureTask<Result>(mWorker) {
+        @Override
+        protected void done() {
+            try {
+                postResultIfNotInvoked(get());
+            } catch (InterruptedException e) {
+                android.util.Log.w(LOG_TAG, e);
+            } catch (ExecutionException e) {
+                throw new RuntimeException("An error occurred while executing doInBackground()",
+                        e.getCause());
+            } catch (CancellationException e) {
+                postResultIfNotInvoked(null);
             }
-        };
-    }
+        }
+    };
+}
 ```
 
 这段代码虽然看起来有点长，但实际上并没有任何具体的逻辑会得到执行，只是初始化了两个变量，mWorker和mFuture，并在初始化mFuture的时候将mWorker作为参数传入。mWorker是一个Callable对象，mFuture是一个FutureTask对象，这两个变量会暂时保存在内存中，稍后才会用到它们。 FutureTask实现了Runnable接口。
@@ -182,8 +182,7 @@ mWorker中的call()方法执行了耗时操作，即`result = doInBackground(mPa
 调用了executeOnExecutor()方法,具体执行逻辑在这个方法里面：
 
 ```java
-  public final AsyncTask<Params, Progress, Result> executeOnExecutor(Executor exec,
-            Params... params) {
+  public final AsyncTask<Params, Progress, Result> executeOnExecutor(Executor exec, Params... params) {
         if (mStatus != Status.PENDING) {
             switch (mStatus) {
                 case RUNNING:
@@ -324,14 +323,14 @@ private void finish(Result result) {
 
 ## 四、AsyncTask使用不当的后果
 
-1.)生命周期
+1. 生命周期
+   
+   AsyncTask不与任何组件绑定生命周期，所以在Activity/或者Fragment中创建执行AsyncTask时，最好在Activity/Fragment的onDestory()调用 cancel(boolean)；
 
-AsyncTask不与任何组件绑定生命周期，所以在Activity/或者Fragment中创建执行AsyncTask时，最好在Activity/Fragment的onDestory()调用 cancel(boolean)；
+2. 内存泄漏
+   
+   如果AsyncTask被声明为Activity的非静态的内部类，那么AsyncTask会保留一个对创建了AsyncTask的Activity的引用。如果Activity已经被销毁，AsyncTask的后台线程还在执行，它将继续在内存里保留这个引用，导致Activity无法被回收，引起内存泄露。
 
-2.)内存泄漏
-
-如果AsyncTask被声明为Activity的非静态的内部类，那么AsyncTask会保留一个对创建了AsyncTask的Activity的引用。如果Activity已经被销毁，AsyncTask的后台线程还在执行，它将继续在内存里保留这个引用，导致Activity无法被回收，引起内存泄露。
-
-3.) 结果丢失
-
-屏幕旋转或Activity在后台被系统杀掉等情况会导致Activity的重新创建，之前运行的AsyncTask（非静态的内部类）会持有一个之前Activity的引用，这个引用已经无效，这时调用onPostExecute()再去更新界面将不再生效。
+3. 结果丢失
+   
+   屏幕旋转或Activity在后台被系统杀掉等情况会导致Activity的重新创建，之前运行的AsyncTask（非静态的内部类）会持有一个之前Activity的引用，这个引用已经无效，这时调用onPostExecute()再去更新界面将不再生效。

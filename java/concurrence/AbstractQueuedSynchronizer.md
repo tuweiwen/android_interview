@@ -2,7 +2,7 @@
 
 ### 1.1 AQS介绍
 
-AbstractQueuedSynchronizer提供了一个基于FIFO队列，可以用于构建锁或者其他相关同步装置的基础框架。该同步器（以下简称同步器）利用了一个int来表示状态，期望它能够成为实现大部分同步需求的基础。使用的方法是继承，子类通过继承同步器并需要实现它的方法来管理其状态，管理的方式就是通过类似acquire和release的方式来操纵状态。然而多线程环境中对状态的操纵必须确保原子性，因此子类对于状态的把握，需要使用这个同步器提供的以下三个方法对状态进行操作：
+`AbstractQueuedSynchronizer`提供了一个基于FIFO队列，可以用于构建锁或者其他相关同步装置的基础框架。该同步器（以下简称同步器）利用了一个int来表示状态，期望它能够成为实现大部分同步需求的基础。使用的方法是继承，子类通过继承同步器并需要实现它的方法来管理其状态，管理的方式就是通过类似`acquire`和`release`的方式来操纵状态。然而多线程环境中对状态的操纵必须确保原子性，因此子类对于状态的把握，需要使用这个同步器提供的以下三个方法对状态进行操作：
 
 ```java
 java.util.concurrent.locks.AbstractQueuedSynchronizer.getState()
@@ -10,7 +10,7 @@ java.util.concurrent.locks.AbstractQueuedSynchronizer.setState(int)
 java.util.concurrent.locks.AbstractQueuedSynchronizer.compareAndSetState(int, int)
 ```
 
-子类推荐被定义为自定义同步装置的内部类，同步器自身没有实现任何同步接口，它仅仅是定义了若干acquire之类的方法来供使用。该同步器即可以作为排他模式也可以作为共享模式，当它被定义为一个排他模式时，其他线程对其的获取就被阻止，而共享模式对于多个线程获取都可以成功。
+子类推荐被定义为自定义同步装置的内部类，同步器自身没有实现任何同步接口，它仅仅是定义了若干`acquire`之类的方法来供使用。该同步器即可以作为排他模式，也可以作为共享模式。当它被定义为一个排他模式时，其他线程对其的获取就被阻止，而共享模式对于多个线程获取都可以成功。
 
 ### 1.2 AQS用处
 
@@ -49,8 +49,8 @@ Node {
 
 实现自定义同步器时，需要使用同步器提供的getState()、setState()和compareAndSetState()方法来操纵状态的变迁。
 
-| 方法名称                                     | 描述                                       |
-| ---------------------------------------- | ---------------------------------------- |
+| 方法名称 | 描述 |
+| --- | --- |
 | protected boolean tryAcquire(int arg)    | 排它的获取这个状态。这个方法的实现需要查询当前状态是否允许获取，然后再进行获取（使用compareAndSetState来做）状态。 |
 | protected boolean tryRelease(int arg)    | 释放状态。                                    |
 | protected int tryAcquireShared(int arg)  | 共享的模式下获取状态。                              |
@@ -64,15 +64,15 @@ Node {
 ```java
 while(获取锁) {
     if (获取到) {
-        退出while循环
+        退出 while 循环
     } else {
-        if(当前线程没有入队列) {
+        if (当前线程没有入队列) {
             那么入队列
         }
         阻塞当前线程
     }
 }
-释放一个排他锁。
+释放一个排他锁
 ```
 
 ```java
@@ -200,8 +200,6 @@ private Node enq(final Node node) {
 
 - 先行尝试在队尾添加；
 
-  ​
-
   如果尾节点已经有了，然后做如下操作：
 
   1. 分配引用T指向尾节点；
@@ -213,11 +211,7 @@ private Node enq(final Node node) {
 
 - 如果队尾添加失败或者是第一个入队的节点。
 
-  ​
-
   如果是第1个节点，也就是sync队列没有初始化，那么会进入到enq这个方法，进入的线程可能有多个，或者说在addWaiter中没有成功入队的线程都将进入enq这个方法。
-
-  ​
 
   可以看到enq的逻辑是确保进入的Node都会有机会顺序的添加到sync队列中，而加入的步骤如下：
 

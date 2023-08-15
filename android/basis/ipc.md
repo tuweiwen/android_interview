@@ -29,7 +29,6 @@ public class MessengerService extends Service {
          */
         @Override
         public void handleMessage(Message msg) {
-
             switch (msg.what) {
                 case Constants.MSG_FROM_CLIENT:
                     Log.d(TAG, "receive msg from client: msg = [" + msg.getData().getString(Constants.MSG_KEY) + "]");
@@ -52,7 +51,6 @@ public class MessengerService extends Service {
     }
 
     private Messenger mMessenger = new Messenger(new MessengerHandler());
-
 
     @Nullable
     @Override
@@ -83,8 +81,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
 }
 ```
 
-**注意：**客户端和服务端是通过拿到对方的 Messenger 来发送 Message 的。只不过客户端通过 bindService onServiceConnected 而服务端通过 message.replyTo 来获得对方的 Messenger 。Messenger 中有一个 Hanlder 以串行的方式处理队列中的消息。不存在并发执行，因此我们不用考虑线程同步的问题。
+**注意：** 客户端和服务端是通过拿到对方的 Messenger 来发送 Message 的。只不过客户端通过 `bindService onServiceConnected` 而服务端通过 `message.replyTo` 来获得对方的 Messenger 。Messenger 中有一个 Hanlder 以串行的方式处理队列中的消息。不存在并发执行，因此我们不用考虑线程同步的问题。
 
 [![Markdown](http://i1.piimg.com/588795/e7bed224f80f5dad.png)](http://i1.piimg.com/588795/e7bed224f80f5dad.png)
 

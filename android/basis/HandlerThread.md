@@ -32,7 +32,7 @@ HandlerThread handlerThread = new HandlerThread("myHandlerThread");
 handlerThread.start();
 ```
 
-1. 将我们的handlerThread与Handler绑定在一起。 
+3. 将我们的handlerThread与Handler绑定在一起。 
    还记得是怎样将Handler与线程对象绑定在一起的吗？其实很简单，就是将线程的looper与Handler绑定在一起，代码如下：
 
 ``` java
@@ -162,15 +162,15 @@ public class HandlerThread extends Thread {
     public void run() {
         mTid = Process.myTid();
         Looper.prepare();
-        //持有锁机制来获得当前线程的Looper对象
+        // 持有锁机制来获得当前线程的Looper对象
         synchronized (this) {
             mLooper = Looper.myLooper();
-            //发出通知，当前线程已经创建mLooper对象成功，这里主要是通知getLooper方法中的wait
+            // 发出通知，当前线程已经创建mLooper对象成功，这里主要是通知getLooper方法中的wait
             notifyAll();
         }
-        //设置线程的优先级别
+        // 设置线程的优先级别
         Process.setThreadPriority(mPriority);
-        //这里默认是空方法的实现，我们可以重写这个方法来做一些线程开始之前的准备，方便扩展
+        // 这里默认是空方法的实现，我们可以重写这个方法来做一些线程开始之前的准备，方便扩展
         onLooperPrepared();
         Looper.loop();
         mTid = -1;

@@ -55,11 +55,9 @@
 
 ```java
 public class MatrixUDG {
-
     private char[] mVexs;       // 顶点集合
     private int[][] mMatrix;    // 邻接矩阵
     private static final int INF = Integer.MAX_VALUE;   // 最大值
-
     ...
 }
 ```
@@ -73,7 +71,7 @@ MatrixUDG是邻接矩阵对应的结构体。mVexs用于保存顶点，mEdgNum�
  * prim最小生成树
  *
  * 参数说明：
- *   start -- 从图中的第start个元素开始，生成最小树
+ * start -- 从图中的第start个元素开始，生成最小树
  */
 public void prim(int start) {
     int num = mVexs.length;         // 顶点个数
@@ -86,7 +84,7 @@ public void prim(int start) {
 
     // 初始化"顶点的权值数组"，
     // 将每个顶点的权值初始化为"第start个顶点"到"该顶点"的权值。
-    for (int i = 0; i < num; i++ )
+    for (int i = 0; i < num; i++)
         weights[i] = mMatrix[start][i];
     // 将第start个顶点的权值初始化为0。
     // 可以理解为"第start个顶点到它自身的距离为0"。
@@ -97,8 +95,8 @@ public void prim(int start) {
         if(start == i)
             continue;
 
-        int j = 0;
-        int k = 0;
+        int j = 0;  /*用于遍历顶点*/
+        int k = 0;  /*保存权值最小顶点的下标*/
         int min = INF;
         // 在未被加入到最小生成树的顶点中，找出权值最小的顶点。
         while (j < num) {

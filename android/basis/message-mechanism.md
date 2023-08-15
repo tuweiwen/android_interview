@@ -7,13 +7,14 @@
 
 ```java
 public class Activity extends android.app.Activity {
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             System.out.println(msg.what);
         }
     };
+
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
@@ -21,7 +22,7 @@ public class Activity extends android.app.Activity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ...............耗时操作
+                // ...............耗时操作
                 Message message = Message.obtain();
                 message.what = 1;
                 mHandler.sendMessage(message);
@@ -254,14 +255,14 @@ public boolean sendMessageAtTime(Message msg, long uptimeMillis) {
 ```
 
 ```java
- private boolean enqueueMessage(MessageQueue queue, Message msg, long uptimeMillis) {
-        msg.target = this;
-        if (mAsynchronous) {
-            msg.setAsynchronous(true);
-        }
-        //调用MessageQueue的enqueueMessage方法
-        return queue.enqueueMessage(msg, uptimeMillis);
+private boolean enqueueMessage(MessageQueue queue, Message msg, long uptimeMillis) {
+    msg.target = this;
+    if (mAsynchronous) {
+        msg.setAsynchronous(true);
     }
+    //调用MessageQueue的enqueueMessage方法
+    return queue.enqueueMessage(msg, uptimeMillis);
+}
 ```
 
 可以看到sendMessageAtTime\(\)方法的作用很简单，就是调用MessageQueue的enqueueMessage\(\)方法，往消息队列中添加一个消息。
@@ -288,13 +289,13 @@ boolean enqueueMessage(Message msg, long when) {
         Message p = mMessages;
         boolean needWake;
         if (p == null || when == 0 || when < p.when) {
-            //p为null(代表MessageQueue没有消息） 或者msg的触发时间是队列中最早的， 则进入该该分支
+            // p为null(代表MessageQueue没有消息） 或者msg的触发时间是队列中最早的， 则进入该该分支
             msg.next = p;
             mMessages = msg;
             needWake = mBlocked; 
         } else {
-            //将消息按时间顺序插入到MessageQueue。一般地，不需要唤醒事件队列，除非
-            //消息队头存在barrier，并且同时Message是队列中最早的异步消息。
+            // 将消息按时间顺序插入到MessageQueue。一般地，不需要唤醒事件队列，除非
+            // 消息队头存在barrier，并且同时Message是队列中最早的异步消息。
             needWake = mBlocked && p.target == null && msg.isAsynchronous();
             Message prev;
             for (;;) {

@@ -7,7 +7,6 @@ Java NIO\(New IO\)是一个可以替代标准Java IO API的IO API\(从Java1.4开
 **由上面的定义就说明NIO是一种新型的IO，但NIO不仅仅就是等于Non-blocking IO（非阻塞IO），NIO中有实现非阻塞IO的具体类，但不代表NIO就是Non-blocking IO（非阻塞IO）。**
 
 Java NIO 由以下几个核心部分组成：
-
  - Buffer  
  - Channel  
  - Selector
@@ -18,24 +17,23 @@ Java NIO 由以下几个核心部分组成：
 
 ##### 利用Buffer读写数据，通常遵循四个步骤：
 
-1. 把数据写入buffer；  
-2. 调用flip；  
-3. 从Buffer中读取数据；  
+1. 把数据写入buffer
+2. 调用flip
+3. 从buffer中读取数据
 4. 调用buffer.clear\(\)
 
 当写入数据到buffer中时，buffer会记录已经写入的数据大小。当需要读数据时，通过flip\(\)方法把buffer从写模式调整为读模式；在读模式下，可以读取所有已经写入的数据。
 
-当读取完数据后，需要清空buffer，以满足后续写入操作。清空buffer有两种方式：调用clear\(\)，一旦读完Buffer中的数据，需要让Buffer准备好再次被写入，clear会恢复状态值，但不会擦除数据。
+当读取完数据后，需要清空buffer，以满足后续写入操作。清空buffer有两种方式：调用clear\(\)，一旦读完buffer中的数据，需要让buffer准备好再次被写入，clear会恢复状态值，但不会擦除数据。
 
 ##### Buffer的容量，位置，上限（Buffer Capacity, Position and Limit）
 
 buffer缓冲区实质上就是一块内存，用于写入数据，也供后续再次读取数据。这块内存被NIO Buffer管理，并提供一系列的方法用于更简单的操作这块内存。
 
-一个Buffer有三个属性是必须掌握的，分别是：  
-
- - capacity容量  
- - position位置  
- - limit限制
+一个Buffer有三个属性是必须掌握的，分别是：
+ - capacity 容量  
+ - position 位置  
+ - limit 限制
 
 position和limit的具体含义取决于当前buffer的模式。capacity在两种模式下都表示容量。  
 下面有张示例图，描诉了不同模式下position和limit的含义：  

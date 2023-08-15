@@ -10,13 +10,13 @@
 
 一般来说，元数据可以用于创建文档（根据程序元素上的注释创建文档），跟踪代码中的依赖性（可声明方法是重载，依赖父类的方法），执行编译时检查（可声明是否编译期检测），代码分析。  
 如下：  
-1） 编写文档：通过代码里标识的元数据生成文档　　  
-2）代码分析：通过代码里标识的元数据对代码进行分析　　  
-3）编译检查：通过代码里标识的元数据让编译器能实现基本的编译检查
+- 创建文档：通过代码里标识的元数据生成文档　　  
+- 代码分析：通过代码里标识的元数据对代码进行分析　　  
+- 编译检查：通过代码里标识的元数据让编译器能实现基本的编译检查
 
-###### 3.Java平台元数据
+##### 3.Java平台元数据
 
-注解Annotation就是java平台的元数据，是 J2SE5.0新增加的功能，该机制允许在Java 代码中添加自定义注释，并允许通过反射（reflection），以编程方式访问元数据注释。通过提供为程序元素（类、方法等）附加额外数据的标准方法，元数据功能具有简化和改进许多应用程序开发领域的潜在能力，其中包括配置管理、框架实现和代码生成。
+注解(Annotation)就是java平台的元数据，是J2SE 5.0新增加的功能，该机制允许在Java 代码中添加自定义注释，并允许通过反射（reflection），以编程方式访问元数据注释。通过提供为程序元素（类、方法等）附加额外数据的标准方法，元数据功能具有简化和改进许多应用程序开发领域的潜在能力，其中包括配置管理、框架实现和代码生成。
 
 ### 二、注解（Annotation）
 
@@ -26,11 +26,11 @@
 
 关于注解（Annotation）的作用，其实就是上述元数据的作用。
 
-**注意：Annotation能被用来为程序元素（类、方法、成员变量等）设置元素据。Annotaion不影响程序代码的执行，无论增加、删除Annotation，代码都始终如一地执行。如果希望让程序中的Annotation起一定的作用，只有通过解析工具或编译工具对Annotation中的信息进行解析和处理。**
+**注意：Annotation能被用来为程序元素（类、方法、成员变量等）设置元数据。Annotaion不影响程序代码的执行，无论增加、删除Annotation，代码都始终如一地执行。如果希望让程序中的Annotation起一定的作用，只有通过解析工具或编译工具对Annotation中的信息进行解析和处理。**
 
 ##### 2.内建注解
 
-Java提供了多种内建的注解，下面接下几个比较常用的注解：@Override、@Deprecated、@SuppressWarnings以及@FunctionalInterface这4个注解。内建注解主要实现了元数据的第二个作用：**编译检查**。
+Java提供了多种内建的注解，下面接下几个比较常用的注解：`@Override`、`@Deprecated`、`@SuppressWarnings`以及`@FunctionalInterface`这4个注解。内建注解主要实现了元数据的第二个作用：**编译检查**。
 
 **@Override**  
 用途：用于告知编译器，我们需要覆写超类的当前方法。如果某个方法带有该注解但并没有覆写超类相应的方法，则编译器会生成一条错误信息。如果父类没有这个要覆写的方法，则编译器也会生成一条错误信息。
@@ -76,11 +76,11 @@ public class Person {
 
 ##### 3.元Annotation
 
-JDK除了在java.lang提供了上述内建注解外，还在java.lang。annotation包下提供了6个Meta Annotation\(元Annotataion\)，其中有5个元Annotation都用于修饰其他的Annotation定义。其中@Repeatable专门用户定义Java 8 新增的可重复注解。
+JDK除了在java.lang提供了上述内建注解外，还在`java.lang.annotation`包下提供了6个Meta Annotation\(元Annotataion\)，其中有5个元Annotation都用于修饰其他的Annotation定义。其中@Repeatable专门用户定义Java 8新增的可重复注解。
 
 我们先介绍其中4个常用的修饰其他Annotation的元Annotation。在此之前，我们先了解如何自定义Annotation。
 
-**当一个接口直接继承java.lang.annotation.Annotation接口时，仍是接口，而并非注解。要想自定义注解类型，只能通过@interface关键字的方式，其实通过该方式会隐含地继承.Annotation接口。**
+> **当一个接口直接继承java.lang.annotation.Annotation接口时，仍是接口，而并非注解。要想自定义注解类型，只能通过@interface关键字的方式，其实通过该方式会隐含地继承Annotation接口。**
 
 **@Documented**
 
@@ -108,7 +108,7 @@ public String(byte[] ascii,int hibyte,int offset, int count)
 
 **@Inherited**
 
-`@Inherited`指定被它修饰的Annotation将具有继承性——如果某个类使用了@Xxx注解（定义该Annotation时使用了`@Inherited`修饰）修饰，则其子类将自动被@Xxx修饰。
+`@Inherited`指定被它修饰的Annotation将具有继承性——如果某个类使用了@xxx注解（定义该Annotation时使用了`@Inherited`修饰）修饰，则其子类将自动被@Xxx修饰。
 
 **@Retention**
 
@@ -139,9 +139,9 @@ public @interface MyAnnotataion{
 **自定义注解中定义成员变量的规则：**
 
 其定义是以无形参的方法形式来声明的。即：  
-注解方法不带参数，比如name\(\)，website\(\)；  
-注解方法返回值类型：基本类型、String、Enums、Annotation以及前面这些类型的数组类型  
-注解方法可有默认值，比如default "hello"，默认website=”hello”
+- 注解方法不带参数，比如name\(\)，website\(\)；  
+- 注解方法返回值类型：基本类型、String、Enums、Annotation以及前面这些类型的数组类型  
+- 注解方法可有默认值，比如default "hello"，默认website=”hello”
 
 **当然注解中也可以不存在成员变量，在使用解析注解进行操作时，仅以是否包含该注解来进行操作。当注解中有成员变量时，若没有默认值，需要在使用注解时，指定成员变量的值。**
 
@@ -161,13 +161,14 @@ public class AnnotationDemo {
 ```
 
 由于该注解的保留策略为`RetentionPolicy.RUNTIME`，故可在运行期通过反射机制来使用，否则无法通过反射机制来获取。这时候注解实现的就是元数据的第二个作用：**代码分析**。  
+
 下面来具体介绍如何通过反射机制来进行注解解析。
 
 ### 四、注解解析
 
-接下来，通过反射技术来解析自定义注解。关于反射类位于包java.lang.reflect，其中有一个接口AnnotatedElement，该接口主要有如下几个实现类：Class，Constructor，Field，Method，Package。除此之外，该接口定义了注释相关的几个核心方法，如下：  
+接下来，通过反射技术来解析自定义注解。关于反射类位于包`java.lang.reflect`，其中有一个接口`AnnotatedElement`，该接口主要有如下几个实现类：Class，Constructor，Field，Method，Package。除此之外，该接口定义了注释相关的几个核心方法，如下：  
 ![](http://upload-images.jianshu.io/upload_images/3985563-4077bbaef5b27a4b.png?imageMogr2/auto-orient/strip|imageView2/2/w/1240)  
-因此，当获取了某个类的Class对象，然后获取其Field,Method等对象，通过上述4个方法提取其中的注解，然后获得注解的详细信息。
+因此，当获取了某个类的Class对象，然后获取其Field，Method等对象，通过上述4个方法提取其中的注解，然后获得注解的详细信息。
 
 ```java
 public class AnnotationParser {

@@ -6,42 +6,15 @@ TCP/IP协议模型（Transmission Control Protocol/Internet Protocol），包含
 
 基于TCP/IP的参考模型将协议分成四个层次，它们分别是链路层、网络层、传输层和应用层。下图表示TCP/IP模型与OSI模型各层的对照关系。
 
-  
-
-
 ![](http://upload-images.jianshu.io/upload_images/3985563-0cc2edef95a71669.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
-
-
-
 
 TCP/IP协议族按照层次由上到下，层层包装。最上面的是应用层，这里面有http，ftp，等等我们熟悉的协议。而第二层则是传输层，著名的TCP和UDP协议就在这个层次。第三层是网络层，IP协议就在这里，它负责对数据加上IP地址和其他的数据以确定传输的目标。第四层是数据链路层，这个层次为待传送的数据加入一个以太网协议头，并进行CRC编码，为最后的数据传输做准备。
 
-  
-
-
 ![](http://upload-images.jianshu.io/upload_images/3985563-8a876f4d031aeacf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
-
-
-
 
 上图清楚地表示了TCP/IP协议中每个层的作用，而TCP/IP协议通信的过程其实就对应着数据入栈与出栈的过程。入栈的过程，数据发送方每层不断地封装首部与尾部，添加一些传输的信息，确保能传输到目的地。出栈的过程，数据接收方每层不断地拆除首部与尾部，得到最终传输的数据。
 
-  
-
-
 ![](http://upload-images.jianshu.io/upload_images/3985563-bc8f28f9d6c40ed5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
-
-
-
 
 上图以HTTP协议为例，具体说明。
 
@@ -49,13 +22,7 @@ TCP/IP协议族按照层次由上到下，层层包装。最上面的是应用�
 
 物理层负责0、1比特流与物理设备电压高低、光的闪灭之间的互换。数据链路层负责将0、1序列划分为数据帧从一个节点传输到临近的另一个节点，这些节点是通过MAC来唯一标识的\(MAC，物理地址，一个主机会有一个MAC地址\)。
 
-  
-
-
 ![](http://upload-images.jianshu.io/upload_images/3985563-626f9f89f361c492.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
 
 * 封装成帧：把网络层数据报加头和尾，封装成帧，帧头中包括源MAC地址和目的MAC地址。
 * 透明传输：零比特填充、转义字符。
@@ -81,12 +48,6 @@ IP协议是TCP/IP协议的核心，所有的TCP，UDP，ICMP，IGCP的数据都�
 ##### 1.2 IP协议头
 
 ![](http://upload-images.jianshu.io/upload_images/3985563-f17dbaa542787fdd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
-
-
-
 
 这里只介绍：八位的TTL（Time To Live）字段。这个字段规定该数据包在穿过多少个路由之后才会被抛弃。某个IP数据包每穿过一个路由器，该数据包的TTL数值就会减少1，当该数据包的TTL成为零，它就会被自动抛弃。
 
@@ -116,16 +77,7 @@ ping可以说是ICMP的最著名的应用，是TCP/IP协议的一部分。利用
 
 例如：当我们某一个网站上不去的时候。通常会ping一下这个网站。ping会回显出一些有用的信息。一般的信息如下:
 
-  
-
-
 ![](http://upload-images.jianshu.io/upload_images/3985563-afb5d86aa0a3a136.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
-
-
-
 
 ping这个单词源自声纳定位，而这个程序的作用也确实如此，它利用ICMP协议包来侦测另一个主机是否可达。原理是用类型码为0的ICMP发请 求，受到请求的主机则用类型码为8的ICMP回应。
 
@@ -137,25 +89,13 @@ Traceroute是用来侦测主机到目的主机之间所经路由情况的重要�
 
 Traceroute的原理非常非常有意思。它收到到目的主机的IP后，首先给目的主机发送一个TTL=1（Time To Live）的UDP数据包，而经过的第一个路由器收到这个数据包以后，就自动把TTL减1，而TTL变为0以后，路由器就把这个包给抛弃了，并同时产生一个主机不可达的ICMP数据报给主机。主机收到这个数据报以后再发一个TTL=2的UDP数据报给目的主机，然后刺激第二个路由器给主机发ICMP数据报。如此往复直到到达目的主机。这样，traceroute就拿到了所有的路由器IP。
 
-  
-
-
 ![](http://upload-images.jianshu.io/upload_images/3985563-05337f62b96c8e02.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
 
 ### 六、TCP/UDP
 
 TCP/UDP都是是传输层协议，但是两者具有不同的特性，同时也具有不同的应用场景，下面以图表的形式对比分析。
 
-  
-
-
 ![](http://upload-images.jianshu.io/upload_images/3985563-4bcddf13416e9f0e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
 
 ##### 面向报文
 
@@ -169,10 +109,7 @@ TCP/UDP都是是传输层协议，但是两者具有不同的特性，同时也�
 
 TCP和UDP协议的一些应用
 
-
 ![](http://upload-images.jianshu.io/upload_images/3985563-d68974689d48cee9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-
 
 #### 什么时候应该使用TCP？
 
@@ -191,9 +128,6 @@ DNS（Domain Name System，域名系统），因特网上作为域名和IP地址
 #### 1.三次握手
 
 TCP是面向连接的，无论哪一方向另一方发送数据之前，都必须先在双方之间建立一条连接。在TCP/IP协议中，TCP协议提供可靠的连接服务，连接是通过三次握手进行初始化的。三次握手的目的是同步连接双方的序列号和确认号并交换 TCP窗口大小信息。
-
-  
-
 
 ![](http://upload-images.jianshu.io/upload_images/3985563-cd5a153e44696643.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
@@ -251,16 +185,7 @@ MSL：报文段最大生存时间，它是任何报文段被丢弃前在网络�
 
 设A向B发送数据。在连接建立时，B告诉了A：“我的接收窗口是 rwnd = 400 ”\(这里的 rwnd 表示 receiver window\) 。因此，发送方的发送窗口不能超过接收方给出的接收窗口的数值。请注意，TCP的窗口单位是字节，不是报文段。假设每一个报文段为100字节长，而数据报文段序号的初始值设为1。**大写ACK表示首部中的确认位ACK，小写ack表示确认字段的值ack。**
 
-  
-
-
 ![](http://upload-images.jianshu.io/upload_images/3985563-846230b2b91e5696.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
-
-
-
 
 从图中可以看出，B进行了三次流量控制。第一次把窗口减少到 rwnd = 300 ，第二次又减到了 rwnd = 100 ，最后减到 rwnd = 0 ，即不允许发送方再发送数据了。这种使发送方暂停发送的状态将持续到主机B重新发出一个新的窗口值为止。B向A发送的三个报文段都设置了 ACK = 1 ，只有在ACK=1时确认号字段才有意义。
 
@@ -282,14 +207,7 @@ TCP为每一个连接设有一个持续计时器\(persistence timer\)。当TCP�
 
 通常在刚刚开始发送报文段时，先把拥塞窗口 cwnd 设置为一个最大报文段MSS（Maximum Segment Size，最大报文长度）的数值。而在每收到一个对新的报文段的确认后，把拥塞窗口增加至多一个MSS的数值（底数为2的指数增长规律）。用这样的方法逐步增大发送方的拥塞窗口 cwnd ，可以使分组注入到网络的速率更加合理。
 
-
 ![](http://upload-images.jianshu.io/upload_images/3985563-470235b1e99d8111.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
-
-
-
 
 每经过一个传输轮次，拥塞窗口 cwnd 就加倍。
 
@@ -316,22 +234,13 @@ TCP为每一个连接设有一个持续计时器\(persistence timer\)。当TCP�
 
 ![](http://upload-images.jianshu.io/upload_images/3985563-8bbeee141535e125.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-  
-
-
 无论在慢开始阶段还是在拥塞避免阶段，只要发送方判断网络出现拥塞（其根据就是没有收到确认），就要把慢开始门限ssthresh设置为出现拥塞时的发送 方窗口值的一半（但不能小于2）。然后把拥塞窗口cwnd重新设置为1，执行慢开始算法。
 
 这样做的目的就是要迅速减少主机发送到网络中的分组数，使得发生 拥塞的路由器有足够时间把队列中积压的分组处理完毕。
 
 如下图，用具体数值说明了上述拥塞控制的过程。现在发送窗口的大小和拥塞窗口一样大。
 
-  
-
-
 ![](http://upload-images.jianshu.io/upload_images/3985563-4ca562045be9350d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
 
 #### 2.快重传和快恢复
 
@@ -339,16 +248,7 @@ TCP为每一个连接设有一个持续计时器\(persistence timer\)。当TCP�
 
 快重传算法首先要求接收方每收到一个失序的报文段后就立即发出重复确认（为的是使发送方及早知道有报文段没有到达对方）而不要等到自己发送数据时才进行捎带确认。
 
-  
-
-
 ![](http://upload-images.jianshu.io/upload_images/3985563-3e4f9c585200ed18.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
-
-
-
 
 接收方收到了M1和M2后都分别发出了确认。现在假定接收方没有收到M3但接着收到了M4。
 
@@ -367,8 +267,4 @@ TCP为每一个连接设有一个持续计时器\(persistence timer\)。当TCP�
 * 当发送方连续收到三个重复确认，就执行“乘法减小”算法，把慢开始门限ssthresh减半。
 * 与慢开始不同之处是现在不执行慢开始算法（即拥塞窗口cwnd现在不设置为1），而是把cwnd值设置为 慢开始门限ssthresh减半后的数值，然后开始执行拥塞避免算法（“加法增大”），使拥塞窗口缓慢地线性增大。
 
-
   ![](http://upload-images.jianshu.io/upload_images/3985563-8e0bf3c2c9554f5d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-
-

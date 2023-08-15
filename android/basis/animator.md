@@ -44,7 +44,7 @@ protected void onCreate(@Nullable Bundle savedInstanceState) {
 
 *可以说，图片资源决定了这种方式可以实现怎样的动画*
 
-*在有些代码中，我们还会看到android：oneshot="false" ，这个oneshot 的含义就是动画执行一次（true）还是循环执行多次。*
+*在有些代码中，我们还会看到android：oneshot="false" ，这个oneshot的含义就是动画执行一次（true）还是循环执行多次。*
 
 这里其他几个动画实现方式都是一样，无非就是图片资源的差异。
 
@@ -90,7 +90,7 @@ img = (ImageView) findViewById(R.id.img);
 img.startAnimation(animation);
 ```
 
-这样就可以实现ImageView alpha 透明变化的动画效果。
+这样就可以实现ImageView a透明变化的动画效果。
 
 也可以使用set 标签将多个动画组合（代码源自Android SDK API）
 
@@ -131,7 +131,7 @@ img.startAnimation(animation);
 
 > Interpolator 主要作用是可以控制动画的变化速率 ，就是动画进行的快慢节奏。
 
-Android 系统已经为我们提供了一些Interpolator ，比如 accelerate_decelerate_interpolator，accelerate_interpolator等。更多的interpolator 及其含义可以在Android SDK 中查看。同时这个Interpolator也是可以自定义的，这个后面还会提到。
+Android 系统已经为我们提供了一些Interpolator，比如 accelerate_decelerate_interpolator，accelerate_interpolator等。更多的interpolator 及其含义可以在Android SDK 中查看。同时这个Interpolator也是可以自定义的，这个后面还会提到。
 
 > pivot 决定了当前动画执行的参考位置
 
@@ -139,19 +139,19 @@ pivot 这个属性主要是在translate 和 scale 动画中，这两种动画都
 
 我们以pivotX为例，
 
-| pivotX取值 | 含义                               |
+| pivotX取值 | 含义 |
 | -------- | -------------------------------- |
-| 10       | 距离动画所在view自身左边缘10像素              |
-| 10%      | 距离动画所在view自身左边缘 的距离是整个view宽度的10% |
+| 10       | 距离动画所在view自身左边缘10像素 |
+| 10%      | 距离动画所在view自身左边缘的距离是整个view宽度的10% |
 | 10%p     | 距离动画所在view父控件左边缘的距离是整个view宽度的10% |
 
 pivotY 也是相同的原理，只不过变成的纵向的位置。如果还是不明白可以参考[源码](https://github.com/REBOOTERS/AndroidAnimationExercise)，在Tweened Animation中结合seekbar的滑动观察rotate的变化理解。
 
 ![](http://upload-images.jianshu.io/upload_images/1115031-743288fa3be134ea.gif?imageMogr2/auto-orient/strip)
 
-#### Java Code  实现
+#### Java Code实现
 
-有时候，动画的属性值可能需要动态的调整，这个时候使用xml 就不合适了，需要使用java代码实现
+有时候，动画的属性值可能需要动态的调整，这个时候使用xml就不合适了，需要使用java代码实现
 
 ```java
 private void RotateAnimation() {
@@ -192,19 +192,19 @@ private void RotateAnimation() {
 首先我们来看看如何用属性动画实现上面补间动画的效果
 
 ```java
-    private void RotateAnimation() {
-        ObjectAnimator anim = ObjectAnimator.ofFloat(myView, "rotation", 0f, 360f);
-        anim.setDuration(1000);
-        anim.start();
-    }
+private void RotateAnimation() {
+    ObjectAnimator anim = ObjectAnimator.ofFloat(myView, "rotation", 0f, 360f);
+    anim.setDuration(1000);
+    anim.start();
+}
 
-    private void AlpahAnimation() {
-        ObjectAnimator anim = ObjectAnimator.ofFloat(myView, "alpha", 1.0f, 0.8f, 0.6f, 0.4f, 0.2f, 0.0f);
-        anim.setRepeatCount(-1);
-        anim.setRepeatMode(ObjectAnimator.REVERSE);
-        anim.setDuration(2000);
-        anim.start();
-    }
+private void AlpahAnimation() {
+    ObjectAnimator anim = ObjectAnimator.ofFloat(myView, "alpha", 1.0f, 0.8f, 0.6f, 0.4f, 0.2f, 0.0f);
+    anim.setRepeatCount(-1);
+    anim.setRepeatMode(ObjectAnimator.REVERSE);
+    anim.setDuration(2000);
+    anim.start();
+}
 ```
 
 这两个方法用属性动画的方式分别实现了旋转动画和淡入淡出动画，其中setDuration、setRepeatMode及setRepeatCount和补间动画中的概念是一样的。
@@ -214,24 +214,24 @@ private void RotateAnimation() {
 当然属性动画也是可以组合实现的
 
 ```java
-                ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(myView, "alpha", 1.0f, 0.5f, 0.8f, 1.0f);
-                ObjectAnimator scaleXAnim = ObjectAnimator.ofFloat(myView, "scaleX", 0.0f, 1.0f);
-                ObjectAnimator scaleYAnim = ObjectAnimator.ofFloat(myView, "scaleY", 0.0f, 2.0f);
-                ObjectAnimator rotateAnim = ObjectAnimator.ofFloat(myView, "rotation", 0, 360);
-                ObjectAnimator transXAnim = ObjectAnimator.ofFloat(myView, "translationX", 100, 400);
-                ObjectAnimator transYAnim = ObjectAnimator.ofFloat(myView, "tranlsationY", 100, 750);
-                AnimatorSet set = new AnimatorSet();
-                set.playTogether(alphaAnim, scaleXAnim, scaleYAnim, rotateAnim, transXAnim, transYAnim);
-//                set.playSequentially(alphaAnim, scaleXAnim, scaleYAnim, rotateAnim, transXAnim, transYAnim);
-                set.setDuration(3000);
-                set.start();
+ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(myView, "alpha", 1.0f, 0.5f, 0.8f, 1.0f);
+ObjectAnimator scaleXAnim = ObjectAnimator.ofFloat(myView, "scaleX", 0.0f, 1.0f);
+ObjectAnimator scaleYAnim = ObjectAnimator.ofFloat(myView, "scaleY", 0.0f, 2.0f);
+ObjectAnimator rotateAnim = ObjectAnimator.ofFloat(myView, "rotation", 0, 360);
+ObjectAnimator transXAnim = ObjectAnimator.ofFloat(myView, "translationX", 100, 400);
+ObjectAnimator transYAnim = ObjectAnimator.ofFloat(myView, "tranlsationY", 100, 750);
+AnimatorSet set = new AnimatorSet();
+set.playTogether(alphaAnim, scaleXAnim, scaleYAnim, rotateAnim, transXAnim, transYAnim);
+//set.playSequentially(alphaAnim, scaleXAnim, scaleYAnim, rotateAnim, transXAnim, transYAnim);
+set.setDuration(3000);
+set.start();
 ```
 
 可以看到这些动画可以同时播放，或者是按序播放。
 
 ### 属性动画核心原理
 
-在上面实现属性动画的时候，我们反复的使用到了ObjectAnimator  这个类，这个类继承自ValueAnimator，使用这个类可以对任意对象的**任意属性**进行动画操作。而ValueAnimator是整个属性动画机制当中最核心的一个类；这点从下面的图片也可以看出。
+在上面实现属性动画的时候，我们反复的使用到了ObjectAnimator这个类，这个类继承自ValueAnimator，使用这个类可以对任意对象的**任意属性**进行动画操作。而ValueAnimator是整个属性动画机制当中最核心的一个类；这点从下面的图片也可以看出。
 
 ![](http://upload-images.jianshu.io/upload_images/1115031-80301bbb0ae884b2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
@@ -242,9 +242,7 @@ private void RotateAnimation() {
 从上图我们可以了解到，通过duration、startPropertyValue和endPropertyValue 等值，我们就可以定义动画运行时长，初始值和结束值。然后通过start方法开始动画。
 那么ValueAnimator 到底是怎样实现从初始值平滑过渡到结束值的呢？这个就是由TypeEvaluator 和TimeInterpolator 共同决定的。
 
-具体来说，**TypeEvaluator 决定了动画如何从初始值过渡到结束值。**
-
-**TimeInterpolator 决定了动画从初始值过渡到结束值的节奏。**
+具体来说：**TypeEvaluator决定了动画如何从初始值过渡到结束值**；**TimeInterpolator决定了动画从初始值过渡到结束值的节奏。**
 
 说的通俗一点，你每天早晨出门去公司上班，TypeEvaluator决定了你是坐公交、坐地铁还是骑车；而当你决定骑车后，TimeInterpolator决定了你一路上骑行的方式，你可以匀速的一路骑到公司，你也可以前半程骑得飞快，后半程骑得慢悠悠。
 
@@ -260,56 +258,55 @@ private void RotateAnimation() {
 
 ### 属性动画自定义实现
 
-这个动画最关键的三点就是 运动轨迹、小球半径及颜色的变化；我们就从这三个方面展开。最后我们在结合Interpolator说一下TimeInterpolator的意义。
+这个动画最关键的三点就是**运动轨迹**、**小球半径**及**颜色**的变化；我们就从这三个方面展开。最后我们在结合Interpolator说一下`TimeInterpolator`的意义。
 
-##### 用TypeEvaluator 确定运动轨迹
+##### 用TypeEvaluator确定运动轨迹
 
 前面说了，TypeEvaluator决定了动画如何从初始值过渡到结束值。这个TypeEvaluator是个接口，我们可以实现这个接口。
 
 ```java
 public class PointSinEvaluator implements TypeEvaluator {
-
     @Override
     public Object evaluate(float fraction, Object startValue, Object endValue) {
         Point startPoint = (Point) startValue;
         Point endPoint = (Point) endValue;
+        
         float x = startPoint.getX() + fraction * (endPoint.getX() - startPoint.getX());
-
         float y = (float) (Math.sin(x * Math.PI / 180) * 100) + endPoint.getY() / 2;
+        
         Point point = new Point(x, y);
         return point;
     }
 }
 ```
 
-PointSinEvaluator 继承了TypeEvaluator类，并实现了他唯一的方法evaluate；这个方法有三个参数，第一个参数fraction 代表当前动画完成的**百分比**，这个值是如何变化的后面还会提到；第二个和第三个参数代表动画的**初始值和结束值**。这里我们的逻辑很简单，x的值随着fraction 不断变化，并最终达到结束值；y的值就是当前x值所对应的sin(x) 值，然后用x 和 y 产生一个新的点（Point对象）返回。
+PointSinEvaluator 继承了TypeEvaluator类，并实现了他唯一的方法evaluate；这个方法有三个参数，第一个参数fraction 代表当前动画完成的**百分比**，这个值是如何变化的后面还会提到；第二个和第三个参数代表动画的**初始值和结束值**。这里我们的逻辑很简单，x的值随着fraction 不断变化，并最终达到结束值；y的值就是当前x值所对应的sin(x)值，然后用x和y产生一个新的点（Point对象）返回。
 
 这样我们就可以使用这个PointSinEvaluator 生成属性动画的实例了。
 
 ```java
-        Point startP = new Point(RADIUS, RADIUS);//初始值（起点）
-        Point endP = new Point(getWidth() - RADIUS, getHeight() - RADIUS);//结束值（终点）
-        final ValueAnimator valueAnimator = ValueAnimator.ofObject(new PointSinEvaluator(), startP, endP);
-        valueAnimator.setRepeatCount(-1);
-        valueAnimator.setRepeatMode(ValueAnimator.REVERSE);
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                currentPoint = (Point) animation.getAnimatedValue();
-                postInvalidate();
-            }
-        });
+Point startP = new Point(RADIUS, RADIUS);//初始值（起点）
+Point endP = new Point(getWidth() - RADIUS, getHeight() - RADIUS);//结（终点）
+final ValueAnimator valueAnimator = ValueAnimator.ofObject(nePointSinEvaluator(), startP, endP);
+valueAnimator.setRepeatCount(-1);
+valueAnimator.setRepeatMode(ValueAnimator.REVERSE);
+valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener({
+    @Override
+    public void onAnimationUpdate(ValueAnimator animation) {
+        currentPoint = (Point) animation.getAnimatedValue();
+        postInvalidate();   //View.postInvalidate()
+    }
+}));
 ```
 
-这样我们就完成了动画轨迹的定义，现在只要调用valueAnimator.start() 方法，就会绘制出一个正弦曲线的轨迹。
+这样我们就完成了动画轨迹的定义，现在只要调用valueAnimator.start()方法，就会绘制出一个正弦曲线的轨迹。
 
 ##### 颜色及半径动画实现
 
-之前我们说过，使用ObjectAnimator  可以对任意对象的任意属性进行动画操作，这句话是不太严谨的，这个任意属性还需要有get 和 set  方法。
+之前我们说过，使用ObjectAnimator可以对任意对象的任意属性进行动画操作，这句话是不太严谨的，这个任意属性还需要有get和set方法。
 
 ```java
 public class PointAnimView extends View {
-
     /**
      * 实现关于color 的属性动画
      */
@@ -317,45 +314,43 @@ public class PointAnimView extends View {
     private float radius = RADIUS;
 
     .....
-
 }
 ```
 
-这里在我们的自定义view中，定义了两个属性color 和 radius，并实现了他们各自的get set 方法，这样我们就可以使用属性动画的特点实现小球颜色变化的动画和半径变化的动画。
+这里在我们的自定义view中，定义了两个属性color和radius，并实现了他们各自的get/set方法，这样我们就可以使用属性动画的特点实现小球颜色变化的动画和半径变化的动画。
 
 ```java
-        ObjectAnimator animColor = ObjectAnimator.ofObject(this, "color", new ArgbEvaluator(), Color.GREEN,
-                Color.YELLOW, Color.BLUE, Color.WHITE, Color.RED);
-        animColor.setRepeatCount(-1);
-        animColor.setRepeatMode(ValueAnimator.REVERSE);
+ObjectAnimator animColor = ObjectAnimator.ofObject(this, "color", new ArgbEvaluator(), Color.GREEN, Color.YELLOW, Color.BLUE, Color.WHITE, Color.RED);
+animColor.setRepeatCount(-1);
+animColor.setRepeatMode(ValueAnimator.REVERSE);
 
 
-        ValueAnimator animScale = ValueAnimator.ofFloat(20f, 80f, 60f, 10f, 35f,55f,10f);
-        animScale.setRepeatCount(-1);
-        animScale.setRepeatMode(ValueAnimator.REVERSE);
-        animScale.setDuration(5000);
-        animScale.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                radius = (float) animation.getAnimatedValue();
-            }
-        });
+ValueAnimator animScale = ValueAnimator.ofFloat(20f, 80f, 60f, 10f, 35f, 55f, 10f);
+animScale.setRepeatCount(-1);
+animScale.setRepeatMode(ValueAnimator.REVERSE);
+animScale.setDuration(5000);
+animScale.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+    @Override
+    public void onAnimationUpdate(ValueAnimator animation) {
+        radius = (float) animation.getAnimatedValue();
+    }
+});
 ```
 
-这里，我们使用ObjectAnimator  实现对color 属性的值按照ArgbEvaluator 这个类的规律在给定的颜色值之间变化，这个ArgbEvaluator 和我们之前定义的PointSinEvaluator一样，都是决定动画如何从初始值过渡到结束值的，只不过这个类是系统自带的，我们直接拿来用就可以，他可以实现各种颜色间的自由过渡。
+这里，我们使用ObjectAnimator实现对color属性的值按照ArgbEvaluator这个类的规律在给定的颜色值之间变化，这个ArgbEvaluator 和我们之前定义的PointSinEvaluator一样，都是决定动画如何从初始值过渡到结束值的，只不过这个类是系统自带的，我们直接拿来用就可以，他可以实现各种颜色间的自由过渡。
 
-对radius 这个属性使用了ValueAnimator，使用了其ofFloat方法实现了一系列float值的变化；同时为其添加了动画变化的监听器，在属性值更新的过程中，我们可以将变化的结果赋给radius，这样就实现了半径动态的变化。
+对radius这个属性使用了ValueAnimator，使用了其ofFloat方法实现了一系列float值的变化；同时为其添加了动画变化的监听器，在属性值更新的过程中，我们可以将变化的结果赋给radius，这样就实现了半径动态的变化。
 
-**这里radius 也可以使用和color相同的方式，只需要把ArgbEvaluator 替换为FloatEvaluator，同时修改动画的变化值即可；使用添加监听器的方式，只是为了介绍监听器的使用方法而已**
+**这里radius也可以使用和color相同的方式，只需要把ArgbEvaluator替换为FloatEvaluator，同时修改动画的变化值即可；使用添加监听器的方式，只是为了介绍监听器的使用方法而已**
 
 好了，到这里我们已经定义出了所有需要的动画，前面说过，属性动画也是可以组合使用的。因此，在动画启动的时候，同时播放这三个动画，就可以实现图中的效果了。
 
 ```java
-        animSet = new AnimatorSet();
-        animSet.play(valueAnimator).with(animColor).with(animScale);
-        animSet.setDuration(5000);
-        animSet.setInterpolator(interpolatorType);
-        animSet.start();
+animSet = new AnimatorSet();
+animSet.play(valueAnimator).with(animColor).with(animScale);
+animSet.setDuration(5000);
+animSet.setInterpolator(interpolatorType);
+animSet.start();
 ```
 
 PointAnimView  源码
@@ -456,14 +451,12 @@ public class PointAnimView extends View {
             }
         });
 
-//
         ObjectAnimator animColor = ObjectAnimator.ofObject(this, "color", new ArgbEvaluator(), Color.GREEN,
                 Color.YELLOW, Color.BLUE, Color.WHITE, Color.RED);
         animColor.setRepeatCount(-1);
         animColor.setRepeatMode(ValueAnimator.REVERSE);
 
-
-        ValueAnimator animScale = ValueAnimator.ofFloat(20f, 80f, 60f, 10f, 35f,55f,10f);
+        ValueAnimator animScale = ValueAnimator.ofFloat(20f, 80f, 60f, 10f, 35f, 55f, 10f);
         animScale.setRepeatCount(-1);
         animScale.setRepeatMode(ValueAnimator.REVERSE);
         animScale.setDuration(5000);
@@ -474,13 +467,11 @@ public class PointAnimView extends View {
             }
         });
 
-
         animSet = new AnimatorSet();
         animSet.play(valueAnimator).with(animColor).with(animScale);
         animSet.setDuration(5000);
         animSet.setInterpolator(interpolatorType);
         animSet.start();
-
     }
 
     private void drawCircle(Canvas canvas) {
@@ -488,7 +479,6 @@ public class PointAnimView extends View {
         float y = currentPoint.getY();
         canvas.drawCircle(x, y, radius, mPaint);
     }
-
 
     public void setInterpolatorType(int type ) {
         switch (type) {
@@ -518,14 +508,12 @@ public class PointAnimView extends View {
         }
     }
 
-
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public void pauseAnimation() {
         if (animSet != null) {
             animSet.pause();
         }
     }
-
 
     public void stopAnimation() {
         if (animSet != null) {

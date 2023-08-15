@@ -2,7 +2,7 @@
 
 Java异常是Java提供的一种识别及响应错误的一致性机制。
 
-Java异常机制可以使程序中异常处理代码和正常业务代码分离，保证程序代码更加优雅，并提高程序健壮性。在有效使用异常的情况下，异常能清晰的回答what, where, why这3个问题：异常类型回答了“什么”被抛出，异常堆栈跟踪回答了“在哪“抛出，异常信息回答了“为什么“会抛出。
+Java异常机制可以使程序中异常处理代码和正常业务代码分离，保证程序代码更加优雅，并提高程序健壮性。在有效使用异常的情况下，异常能清晰的回答what, where, why这3个问题：异常类型回答了 **“什么”** 被抛出，异常堆栈跟踪回答了 **“在哪”** 抛出，异常信息回答了 **“为什么”** 会抛出。
 
 Java异常机制用到的几个关键字：**try、catch、finally、throw、throws。**
 
@@ -26,9 +26,9 @@ public class Demo1 {
     public static void main(String[] args) {
         try {
             int i = 10/0;
-              System.out.println("i="+i); 
+            System.out.println("i="+i); 
         } catch (ArithmeticException e) {
-              System.out.println("Caught Exception"); 
+            System.out.println("Caught Exception"); 
             System.out.println("e.getMessage(): " + e.getMessage()); 
             System.out.println("e.toString(): " + e.toString()); 
             System.out.println("e.printStackTrace():");
@@ -104,7 +104,6 @@ class MyException extends Exception {
 }
 
 public class Demo3 {
-
     public static void main(String[] args) {
         try {
             test();
@@ -116,7 +115,7 @@ public class Demo3 {
     public static void test() throws MyException{
         try {
             int i = 10/0;
-              System.out.println("i="+i); 
+            System.out.println("i="+i); 
         } catch (ArithmeticException e) {
             throw new MyException("This is MyException"); 
         }
@@ -159,7 +158,7 @@ RuntimeException是那些可能在 Java 虚拟机正常运行期间抛出的异�
 
 编译器不会检查RuntimeException异常。例如，除数为零时，抛出ArithmeticException异常。RuntimeException是ArithmeticException的超类。当代码发生除数为零的情况时，倘若既"没有通过throws声明抛出ArithmeticException异常"，也"没有通过try...catch...处理该异常"，也能通过编译。这就是我们所说的"编译器不会检查RuntimeException异常"！
 
-如果代码会产生RuntimeException异常，则需要通过修改代码进行避免。例如，若会发生除数为零的情况，则需要通过代码避免该情况的发生！
+如果代码会产生RuntimeException异常，则需要通过修改代码进行避免。例如，若会发生除数为零的情况，则需要通过代码避免该情况的发生
 
 **4. Error**
 
@@ -167,12 +166,12 @@ RuntimeException是那些可能在 Java 虚拟机正常运行期间抛出的异�
 
 和RuntimeException一样，编译器也不会检查Error。
 
- Java将可抛出(Throwable)的结构分为三种类型：**被检查的异常(Checked Exception)，运行时异常(RuntimeException)和错误(Error)。**
+Java将可抛出(Throwable)的结构分为三种类型：**被检查的异常(Checked Exception)，运行时异常(RuntimeException)和错误(Error)。**
 
 **(01) 运行时异常**
-**定义**: RuntimeException及其子类都被称为运行时异常。
+**定义**：RuntimeException及其子类都被称为运行时异常。
 
-**特点**: Java编译器不会检查它。也就是说，当程序中可能出现这类异常时，倘若既"没有通过throws声明抛出它"，也"没有用try-catch语句捕获它"，还是会编译通过。例如，除数为零时产生的ArithmeticException异常，数组越界时产生的IndexOutOfBoundsException异常，fail-fast机制产生的ConcurrentModificationException异常等，都属于运行时异常。
+**特点**：Java编译器不会检查它。也就是说，当程序中可能出现这类异常时，倘若既"没有通过throws声明抛出它"，也"没有用try-catch语句捕获它"，还是会编译通过。例如，除数为零时产生的ArithmeticException异常，数组越界时产生的IndexOutOfBoundsException异常，fail-fast机制产生的ConcurrentModificationException异常等，都属于运行时异常。
 
 虽然Java编译器不会检查运行时异常，但是我们也可以通过throws进行声明抛出，也可以通过try-catch对它进行捕获处理。
 
@@ -194,4 +193,4 @@ RuntimeException是那些可能在 Java 虚拟机正常运行期间抛出的异�
 
 当资源不足、约束失败、或是其它程序无法继续运行的条件发生时，就产生错误。程序本身无法修复这些错误的。例如，VirtualMachineError就属于错误。
 
-按照Java惯例，我们是不应该实现任何新的Error子类的！
+**按照Java惯例，我们不应该实现任何新的Error子类**

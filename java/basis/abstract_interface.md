@@ -1,48 +1,39 @@
 ## 理解抽象
 
-abstract class和interface是Java语言中对于抽象类定义进行支持的两种机制，正是由于这两种机制的存在，才赋予了Java强大的面向对象能力。 abstract class和interface之间在对于抽象类定义的支持方面具有很大的相似性，甚至可以相互替换，因此很多开发者在进行抽象类定义时对于 abstract class和interface的选择显得比较随意。
+`abstract class`和`interface`是Java语言中对于抽象类定义进行支持的两种机制，正是由于这两种机制的存在，才赋予了Java强大的面向对象能力。  
+`abstract class`和`interface`之间在对于抽象类定义的支持方面具有很大的相似性，甚至可以相互替换，因此很多开发者在进行抽象类定义时对于`abstract class`和`interface`的选择显得比较随意。
 
 其实，两者之间还是有很大的区别的，对于它们的选择甚至反映出对于问题领域本质的理解、对于设计意图的理解是否正确、合理。本文将对它们之间的区别进行一番剖析，试图给开发者提供一个在二者之间进行选择的依据。
 
 ## 语法定义理解
 
 1. 抽象类
-
-   ```java
-   abstract class Demo ｛    
-
-       abstract void method1();    
-
-       abstract void method2();    
-
-       …    
-
-   ｝    
-   ```
+```java
+abstract class Demo {    
+    abstract void method1();
+    abstract void method2();
+    ...  
+} 
+```
 
 2. 接口
+```java
+interface Demo {    
+    void method1();
+    void method2();
+    ....
+}    
+```
 
-   ```java
-   interface Demo {    
-
-       void method1();    
-
-       void method2();    
-
-       …    
-
-   }    
-   ```
-
-在abstract class方式中，Demo可以有自己的数据成员，也可以有非abstarct的成员方法，而在interface方式的实现中，Demo只能够有静态的不能被修改的数据成员（也就是必须是static final的，不过在interface中一般不定义数据成员），所有的成员方法都是abstract的。从某种意义上说，interface是一种特殊形式的abstract class。
+在`abstract class`方式中，`Demo`可以有自己的数据成员，也可以有非`abstarct`的成员方法，而在`interface`方式的实现中，`Demo`只能够有静态的不能被修改的数据成员（也就是必须是`static final`的，不过在`interface`中一般不定义数据成员），所有的成员方法都是`abstract`的。从某种意义上说，`interface`是一种特殊形式的`abstract class`。
 
 ## 编程角度理解
 
-首先，abstract class在Java语言中表示的是一种继承关系，一个类只能使用一次继承关系。但是，一个类却可以实现多个interface。也许，这是Java语言的设计者在考虑Java对于多重继承的支持方面的一种折中考虑吧。
+首先，`abstract class`在Java语言中表示的是一种继承关系，一个类只能使用一次继承关系。但是，一个类却可以实现多个`interface`。也许，这是Java语言的设计者在考虑Java对于多重继承的支持方面的一种折中考虑吧。
 
-其次，在abstract class的定义中，我们可以赋予方法的默认行为。
+其次，在`abstract class`的定义中，我们可以赋予方法的默认行为。
 
-但是在interface的定义中，方法却不能拥有默认行为，不过在JDK1.8中可以使用`default`关键字实现默认方法。
+但是在`interface`的定义中，方法却不能拥有默认行为，不过在JDK1.8中可以使用`default`关键字实现默认方法。
 
 ```java
 interface InterfaceA {
@@ -56,9 +47,13 @@ interface InterfaceA {
 
 ## 一般性理解
 
-接口和抽象类的概念不一样。接口是对动作的抽象，抽象类是对根源的抽象。从设计理念上，接口反映的是 **“like-a”** 关系，抽象类反映的是 **“is-a”** 关系。
-抽象类表示的是，这个对象是什么。接口表示的是，这个对象能做什么。比如，男人，女人，这两个类（如果是类的话……），他们的抽象类是人。说明，他们都是人。
-人可以吃东西，狗也可以吃东西，你可以把“吃东西”定义成一个接口，然后让这些类去实现它.
+接口和抽象类的概念不一样：接口是对动作的抽象，抽象类是对根源的抽象。  
+
+从设计理念上，接口反映的是 **“like-a”** 关系，抽象类反映的是 **“is-a”** 关系。
+抽象类表示的是，这个对象是什么；接口表示的是，这个对象能做什么。
+
+比如，男人，女人，这两个类（如果是类的话……），他们的抽象类是人。说明，他们都是人。人可以吃东西，狗也可以吃东西，你可以把“吃东西”定义成一个接口，然后让这些类去实现它。
+
 所以，在高级语言上，一个类只能继承一个类（抽象类）(正如人不可能同时是生物和非生物)，但是可以实现多个接口(吃饭接口、走路接口)。
 
 ## 总结

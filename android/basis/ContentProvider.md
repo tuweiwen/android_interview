@@ -147,9 +147,9 @@ vnd.android.cursor.dir/自定义
 
 // 注：
   // 1. 上述4个方法由外部进程回调，并运行在ContentProvider进程的Binder线程池中（不是主线程）
- // 2. 存在多线程并发访问，需要实现线程同步
-   // a. 若ContentProvider的数据存储方式是使用SQLite & 一个，则不需要，因为SQLite内部实现好了线程同步，若是多个SQLite则需要，因为SQL对象之间无法进行线程同步
-  // b. 若ContentProvider的数据存储方式是内存，则需要自己实现线程同步
+  // 2. 存在多线程并发访问，需要实现线程同步
+    // a. 若ContentProvider的数据存储方式是使用SQLite & 一个，则不需要，因为SQLite内部实现好了线程同步，若是多个SQLite则需要，因为SQL对象之间无法进行线程同步
+    // b. 若ContentProvider的数据存储方式是内存，则需要自己实现线程同步
 
 <-- 2个其他方法 -->
 public boolean onCreate() 
@@ -225,7 +225,7 @@ Cursor cursor = resolver.query(uri, null, null, null, "userid desc");
 
 - 作用：操作 `URI`
 - 具体使用
-  核心方法有两个：`withAppendedId（）` &`parseId（）`
+  核心方法有两个：`withAppendedId（）` & `parseId（）`
 
 ```java
 // withAppendedId（）作用：向URI追加一个id
@@ -244,8 +244,8 @@ long personid = ContentUris.parseId(uri);
 - 作用
   1. 在`ContentProvider` 中注册`URI`
   2. 根据 `URI` 匹配 `ContentProvider` 中对应的数据表
+  
 - 具体使用
-
 ```Java
 // 步骤1：初始化UriMatcher对象
 UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -315,7 +315,6 @@ getContentResolver().unregisterContentObserver（uri）；
 - 由于`ContentProvider`不仅常用于进程间通信，同时也适用于进程内通信
 
 - 所以本实例会采用ContentProvider讲解：
-
   1. 进程内通信
   2. 进程间通信
 
@@ -380,7 +379,7 @@ public class MyProvider extends ContentProvider {
     public static final int User_Code = 1;
     public static final int Job_Code = 2;
 
-    // UriMatcher类使用:在ContentProvider 中注册URI
+    // UriMatcher类使用:在 ContentProvider 中注册 URI
     private static final UriMatcher mMatcher;
 
     static {

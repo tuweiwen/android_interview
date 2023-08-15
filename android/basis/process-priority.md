@@ -4,16 +4,16 @@
 
 - 处于正在与用户交互的activity
 - 与前台activity绑定的service
-- 调用了startForeground（）方法的service
-- 正在执行oncreate（），onstart（），ondestroy方法的 service。
-- 进程中包含正在执行onReceive（）方法的BroadcastReceiver。
+- 调用了startForeground()方法的service
+- 正在执行oncreate()，onstart()，ondestroy方法的 service。
+- 进程中包含正在执行onReceive()方法的BroadcastReceiver。
 
 系统中的前台进程并不会很多，而且一般前台进程都不会因为内存不足被杀死。特殊情况除外。当内存低到无法保证所有的前台进程同时运行时，才会选择杀死某个进程。
 
 ### 可视进程
 
-- 为处于前台，但仍然可见的activity（例如：调用了onpause（）而还没调用onstop（）的activity）。典型情况是：运行activity时，弹出对话框（dialog等），此时的activity虽然不是前台activity，但是仍然可见。
-- 可见activity绑定的service。（处于上诉情况下的activity所绑定的service）
+- 为处于前台，但仍然可见的activity（例如：调用了onPause()而还没调用onStop()的activity）。典型情况是：运行activity时，弹出对话框（dialog等），此时的activity虽然不是前台activity，但是仍然可见。
+- 可见activity绑定的service。（处于上述情况下的activity所绑定的service）
 
 可视进程一般也不会被系统杀死，除非为了保证前台进程的运行不得已而为之。
 
@@ -23,7 +23,7 @@
 
 ### 后台进程
 
-- 不可见的activity（调用onstop（）之后的activity）
+- 不可见的activity（调用onstop()之后的activity）
 
 后台进程不会影响用户的体验，为了保证前台进程，可视进程，服务进程的运行，系统随时有可能杀死一个后台进程。当一个正确实现了生命周期的activity处于后台被杀死时，如果用户重新启动，会恢复之前的运行状态。
 

@@ -10,33 +10,25 @@
 
 ```java
 public class FinallyTest1 {
-
     public static void main(String[] args) {
-        
         System.out.println(test1());
     }
 
     public static int test1() {
         int b = 20;
-
         try {
             System.out.println("try block");
-
             return b += 80; 
         }
         catch (Exception e) {
-
             System.out.println("catch block");
         }
         finally {
-            
             System.out.println("finally block");
-            
             if (b > 25) {
                 System.out.println("b>25, b = " + b);
             }
         }
-        
         return b;
     }
     
@@ -58,27 +50,23 @@ b>25, b = 100
 
 ```java
 public class FinallyTest1 {
-
     public static void main(String[] args) {
-        
         System.out.println(test11());
     }
     
     public static String test11() {
         try {
             System.out.println("try block");
+            return test12();
+        } finally {
+            System.out.println("finally block");
+        }
+    }
 
-           return test12();
-      } finally {
-           System.out.println("finally block");
-       }
-  }
-
-  public static String test12() {
-       System.out.println("return statement");
-
-       return "after return";
-   }
+    public static String test12() {
+        System.out.println("return statement");
+        return "after return";
+    }
     
 }
 ```
@@ -102,34 +90,25 @@ after return
 public class FinallyTest2 {
 
     public static void main(String[] args) {
-
         System.out.println(test2());
     }
 
     public static int test2() {
         int b = 20;
-
         try {
             System.out.println("try block");
-
             return b += 80;
         } catch (Exception e) {
-
             System.out.println("catch block");
         } finally {
-
             System.out.println("finally block");
-
             if (b > 25) {
                 System.out.println("b>25, b = " + b);
             }
-
             return 200;
         }
-
         // return b;
     }
-
 }
 ```
 
@@ -152,36 +131,26 @@ b>25, b = 100
 
 ```java
 public class FinallyTest3 {
-
     public static void main(String[] args) {
-
         System.out.println(test3());
     }
 
     public static int test3() {
         int b = 20;
-
         try {
             System.out.println("try block");
-
             return b += 80;
         } catch (Exception e) {
-
             System.out.println("catch block");
         } finally {
-
             System.out.println("finally block");
-
             if (b > 25) {
                 System.out.println("b>25, b = " + b);
             }
-
             b = 150;
         }
-
         return 2000;
     }
-
 }
 ```
 
@@ -208,7 +177,6 @@ public class FinallyTest6
     public static Map<String, String> getMap() {
         Map<String, String> map = new HashMap<String, String>();
         map.put("KEY", "INIT");
-         
         try {
             map.put("KEY", "TRY");
             return map;
@@ -220,7 +188,6 @@ public class FinallyTest6
             map.put("KEY", "FINALLY");
             map = null;
         }
-         
         return map;
     }
 }
@@ -232,7 +199,7 @@ public class FinallyTest6
 FINALLY
 ```
 
-为什么测试用例1中finally里的b = 150;并没有起到作用而测试用例2中finally的map.put("KEY", "FINALLY");起了作用而map = null;却没起作用呢？这就是Java到底是传值还是传址的问题了，具体请看[精选30道Java笔试题解答](http://www.cnblogs.com/lanxuezaipiao/p/3371224.html)，里面有详细的解答，简单来说就是：Java中只有传值没有传址，这也是为什么map = null这句不起作用。这同时也说明了返回语句是try中的return语句而不是 finally外面的return b;这句，不相信的话可以试下，将return b;改为return 294，对原来的结果没有一点影响。
+为什么测试用例1中finally里的`b = 150;`并没有起到作用，而测试用例2中finally的`map.put("KEY", "FINALLY");`起了作用，而`map = null;`却没起作用呢？这就是Java到底是传值还是传址的问题了，具体请看[精选30道Java笔试题解答](http://www.cnblogs.com/lanxuezaipiao/p/3371224.html)，里面有详细的解答。简单来说就是：Java中只有传值没有传址，这也是为什么`map = null`这句不起作用。这同时也说明了返回语句是try中的return语句而不是finally外面的`return b`;这句，不相信的话可以试下，将`return b;`改为`return 294`，对原来的结果没有一点影响。
 
 这里大家可能又要想：是不是每次返回的一定是try中的return语句呢？那么finally外的return b不是一点作用没吗？请看下面。
 
@@ -240,36 +207,26 @@ FINALLY
 
 ```java
 public class FinallyTest4 {
-
     public static void main(String[] args) {
-
         System.out.println(test4());
     }
 
     public static int test4() {
         int b = 20;
-
         try {
             System.out.println("try block");
-
             b = b / 0;
-
             return b += 80;
         } catch (Exception e) {
-
             b += 15;
             System.out.println("catch block");
         } finally {
-
             System.out.println("finally block");
-
             if (b > 25) {
                 System.out.println("b>25, b = " + b);
             }
-
             b += 50;
         }
-
         return b;
     }
 
@@ -277,7 +234,6 @@ public class FinallyTest4 {
 ```
 
 运行结果是：
-
 ```
 try block
 catch block

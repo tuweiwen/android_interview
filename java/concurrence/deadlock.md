@@ -1,10 +1,10 @@
 ### 一、死锁产生的条件
 
 一般来说，要出现死锁问题需要满足以下条件：
-1. 互斥条件：一个资源每次只能被一个线程使用。
-2. 请求与保持条件：一个线程因请求资源而阻塞时，对已获得的资源保持不放。
-3. 不剥夺条件：线程已获得的资源，在未使用完之前，不能强行剥夺。
-4. 循环等待条件：若干线程之间形成一种头尾相接的循环等待资源关系。
+1. **互斥** 条件：一个资源每次只能被一个线程使用。
+2. **请求与保持** 条件：一个线程因请求资源而阻塞时，对已获得的资源保持不放。
+3. **不剥夺** 条件：线程已获得的资源，在未使用完之前，不能强行剥夺。
+4. **循环等待** 条件：若干线程之间形成一种头尾相接的循环等待资源关系。
 
 在JAVA编程中，有3种典型的死锁类型：   
 静态的锁顺序死锁，动态的锁顺序死锁，协作对象之间发生的死锁。
@@ -65,7 +65,7 @@ class StaticLockOrderDeadLock {
 
 ### 三、动态的锁顺序死锁：
 
-动态的锁顺序死锁是指两个线程调用同一个方法时，传入的参数颠倒造成的死锁。如下代码，一个线程调用了transferMoney方法并传入参数accountA,accountB；另一个线程调用了transferMoney方法并传入参数accountB,accountA。此时就可能发生在静态的锁顺序死锁中存在的问题，即：第一个线程获得了accountA锁并等待accountB锁，第二个线程获得了accountB锁并等待accountA锁。
+动态的锁顺序死锁是指两个线程调用同一个方法时，传入的参数颠倒造成的死锁。如下代码，一个线程调用了transferMoney方法并传入参数accountA，accountB；另一个线程调用了transferMoney方法并传入参数accountB，accountA。此时就可能发生在静态的锁顺序死锁中存在的问题，即：第一个线程获得了accountA锁并等待accountB锁，第二个线程获得了accountB锁并等待accountA锁。
 
 ```java
 //可能发生动态锁顺序死锁的代码
@@ -133,7 +133,7 @@ class DynamicLockOrderDeadLock {
 有时，死锁并不会那么明显，比如两个相互协作的类之间的死锁，比如下面的代码：一个线程调用了Taxi对象的setLocation方法，另一个线程调用了Dispatcher对象的getImage方法。此时可能会发生，第一个线程持有Taxi对象锁并等待Dispatcher对象锁，另一个线程持有Dispatcher对象锁并等待Taxi对象锁。
 
 ``` java
-//可能发生死锁
+// 可能发生死锁
 class Taxi {
     private Point location, destination;
     private final Dispatcher dispatcher;
@@ -149,7 +149,8 @@ class Taxi {
     public synchronized void setLocation(Point location) {
         this.location = location;
         if (location.equals(destination))
-            dispatcher.notifyAvailable(this);//外部调用方法，可能等待Dispatcher对象锁
+            // 外部调用方法，可能等待Dispatcher对象锁
+            dispatcher.notifyAvailable(this); 
     }
 }
 
@@ -169,18 +170,19 @@ class Dispatcher {
     public synchronized Image getImage() {
         Image image = new Image();
         for (Taxi t : taxis)
-            image.drawMarker(t.getLocation());//外部调用方法，可能等待Taxi对象锁
+            // 外部调用方法，可能等待Taxi对象锁
+            image.drawMarker(t.getLocation());
         return image;
     }
 }
 ```
 
-上面的代码中， **我们在持有锁的情况下调用了外部的方法，这是非常危险的（可能发生死锁）。为了避免这种危险的情况发生，** 我们使用开放调用。如果调用某个外部方法时不需要持有锁，我们称之为开放调用。
+上面的代码中， **我们在持有锁的情况下调用了外部的方法，这是非常危险的（可能发生死锁）。** 为了避免这种危险的情况发生，我们使用**开放调用**。如果调用某个外部方法时不需要持有锁，我们称之为开放调用。
 
 **解决协作对象之间发生的死锁：需要使用开放调用，即避免在持有锁的情况下调用外部的方法。**
 
 ```java
-//正确的代码
+// 正确的代码
 class Taxi {
     private Point location, destination;
     private final Dispatcher dispatcher;
@@ -200,7 +202,8 @@ class Taxi {
             flag = location.equals(destination);
         }
         if (flag)
-            dispatcher.notifyAvailable(this);//使用开放调用
+            // 使用开放调用
+            dispatcher.notifyAvailable(this);
     }
 }
 
@@ -224,7 +227,8 @@ class Dispatcher {
         }
         Image image = new Image();
         for (Taxi t : copy)
-            image.drawMarker(t.getLocation());//使用开放调用
+            // 使用开放调用
+            image.drawMarker(t.getLocation());
         return image;
     }
 }

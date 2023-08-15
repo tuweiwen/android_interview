@@ -71,7 +71,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
 }
 ```
 
-从源代码可以Doug lea巧妙的采用组合模式把lock和unlock方法委托给同步器完成。
+从源代码可以看到，Doug lea巧妙的采用组合模式把lock和unlock方法委托给同步器完成。
 
 ## 使用方式
 
@@ -102,7 +102,7 @@ try {
 2. 在某一个时间点，线程A执行unlock，唤醒线程B；
 3. 同时线程G执行lock，这个时候会发生什么？线程B和G拥有相同的优先级，这里讲的优先级是指获取锁的优先级，同时执行CAS指令竞争锁。如果恰好线程G成功了，线程B就得重新挂起等待被唤醒。
 
-通过上述场景描述，我们可以看书，即使线程B等了很长时间也得和新来的线程G同时竞争锁，如此的不公平。
+通过上述场景描述，我们可以看出，即使线程B等了很长时间也得和新来的线程G同时竞争锁，如此的不公平。
 
 ```java
 static final class NonfairSync extends Sync {
@@ -361,7 +361,6 @@ await实现逻辑：
 ```
 
 signal实现逻辑：
-
 1. 接着上述场景，线程B执行了signal方法，取出条件队列中的第一个非CANCELLED节点线程，即线程A。另外，signalAll就是唤醒条件队列中所有非CANCELLED节点线程。遇到CANCELLED线程就需要将其从队列中删除。
 2. 通过CAS修改线程A的waitStatus，表示该节点已经不是等待条件状态，并将线程A插入到AQS的等待队列中。
 3. 唤醒线程A，线程A和别的线程进行锁的竞争。
@@ -371,5 +370,5 @@ signal实现逻辑：
 1. ReentrantLock提供了内置锁类似的功能和内存语义。
 2. 此外，ReetrantLock还提供了其它功能，包括定时的锁等待、可中断的锁等待、公平性、以及实现非块结构的加锁、Condition，对线程的等待和唤醒等操作更加灵活，一个ReentrantLock可以有多个Condition实例，所以更有扩展性，不过ReetrantLock需要显示的获取锁，并在finally中释放锁，否则后果很严重。
 3. ReentrantLock在性能上似乎优于Synchronized，其中在jdk1.6中略有胜出，在1.5中是远远胜出。那么为什么不放弃内置锁，并在新代码中都使用ReetrantLock？
-4. 在java1.5中， 内置锁与ReentrantLock相比有例外一个优点：在线程转储中能给出在哪些调用帧中获得了哪些锁，并能够检测和识别发生死锁的线程。Reentrant的非块状特性任然意味着，获取锁的操作不能与特定的栈帧关联起来，而内置锁却可以。
-5. 因为内置锁时JVM的内置属性，所以未来更可能提升synchronized而不是ReentrantLock的性能。例如对线程封闭的锁对象消除优化，通过增加锁粒度来消除内置锁的同步。
+4. 在java1.5中，内置锁与ReentrantLock相比有例外一个优点：在线程转储中能给出在哪些调用帧中获得了哪些锁，并能够检测和识别发生死锁的线程。Reentrant的非块状特性任然意味着，获取锁的操作不能与特定的栈帧关联起来，而内置锁却可以。
+5. 因为内置锁是JVM的内置属性，所以未来更可能提升synchronized而不是ReentrantLock的性能。例如对线程封闭的锁对象消除优化，通过增加锁粒度来消除内置锁的同步。

@@ -4,33 +4,26 @@
 
 Object类中相关的方法有notify方法和wait方法。因为wait和notify方法定义在Object类中，因此会被所有的类所继承。这些方法都是**final**的，即它们都是不能被重写的，不能通过子类覆写去改变它们的行为。
 
-**①wait\(\)方法：** 让当前线程进入等待，并释放锁。
-
-**②wait\(long\)方法：** 让当前线程进入等待，并释放锁，不过等待时间为long，超过这个时间没有对当前线程进行唤醒，将**自动唤醒**。
-
-**③notify\(\)方法：** 让当前线程通知那些处于等待状态的线程，当前线程执行完毕后释放锁，并从其他线程中唤醒其中一个继续执行。
-
-**④notifyAll\(\)方法：** 让当前线程通知那些处于等待状态的线程，当前线程执行完毕后释放锁，将唤醒所有等待状态的线程。
+**①wait\(\)方法：** 让当前线程进入等待，并释放锁。  
+**②wait\(long\)方法：** 让当前线程进入等待，并释放锁，不过等待时间为long，超过这个时间没有对当前线程进行唤醒，将**自动唤醒**。  
+**③notify\(\)方法：** 让当前线程通知那些处于等待状态的线程。当前线程执行完毕后释放锁，并从其他线程中唤醒其中一个继续执行。  
+**④notifyAll\(\)方法：** 让当前线程通知那些处于等待状态的线程。当前线程执行完毕后释放锁，将唤醒所有等待状态的线程。
 
 ##### wait\(\)方法使用注意事项
 
-①当前的线程必须拥有当前对象的monitor，也即lock，就是锁，才能调用wait\(\)方法，否则将抛出异常java.lang.IllegalMonitorStateException。
-
-②线程调用wait\(\)方法，释放它对锁的拥有权，然后等待另外的线程来通知它（通知的方式是notify\(\)或者notifyAll\(\)方法），这样它才能重新获得锁的拥有权和恢复执行。
-
-③要确保调用wait\(\)方法的时候拥有锁，即，wait\(\)方法的调用必须放在synchronized方法或synchronized块中。
+- 当前的线程必须拥有当前对象的monitor，也即lock，就是锁，才能调用wait\(\)方法，否则将抛出异常java.lang.IllegalMonitorStateException。  
+- 线程调用wait\(\)方法，释放它对锁的拥有权，然后等待另外的线程来通知它（通知的方式是notify\(\)或者notifyAll\(\)方法），这样它才能重新获得锁的拥有权和恢复执行。  
+- 要确保调用wait\(\)方法的时候拥有锁，即，wait\(\)方法的调用必须放在synchronized方法或synchronized块中。
 
 **wait\(\)与sleep\(\)比较**
 
-当线程调用了wait\(\)方法时，它会释放掉对象的锁。
-
-Thread.sleep\(\)，它会导致线程睡眠指定的毫秒数，但线程在睡眠的过程中是不会释放掉对象的锁的。
+- 当线程调用了wait\(\)方法时，它会释放掉对象的锁。
+- Thread.sleep\(\)，它会导致线程睡眠指定的毫秒数，但线程在睡眠的过程中是不会释放掉对象的锁的。
 
 ##### notify\(\)方法使用注意事项
 
-①如果多个线程在等待，它们中的一个将会选择被唤醒。这种选择是随意的，和具体实现有关。（线程等待一个对象的锁是由于调用了wait\(\)方法）。
-
-②被唤醒的线程是不能被执行的，需要等到当前线程放弃这个对象的锁，当前线程会在方法执行完毕后释放锁。
+- 如果多个线程在等待，它们中的一个将会选择被唤醒。这种选择是随意的，和具体实现有关。（线程等待一个对象的锁是由于调用了wait\(\)方法）。
+- 被唤醒的线程是不能被执行的，需要等到当前线程放弃这个对象的锁，当前线程会在方法执行完毕后释放锁。
 
 ##### wait\(\)/notify\(\)协作的两个注意事项
 
@@ -74,13 +67,13 @@ public class MyRun {
 
 ```java
 public static void main(String[] args) throws InterruptedException {
-        MyRun run = new MyRun();
-        Thread bThread = new Thread(run.runnableB);
-        bThread.start();
-        Thread.sleep(100);
-        Thread aThread = new Thread(run.runnableA);
-        aThread.start();
-    }
+    MyRun run = new MyRun();
+    Thread bThread = new Thread(run.runnableB);
+    bThread.start();
+    Thread.sleep(100);
+    Thread aThread = new Thread(run.runnableA);
+    aThread.start();
+}
 ```
 
 如果notify\(\)方法先执行，将导致wait\(\)方法释放锁进入等待状态后，永远无法被唤醒，影响程序逻辑。应避免这种情况。
@@ -99,6 +92,7 @@ public class Add {
         super();
         this.lock = lock;
     }
+
     public void add(){
         synchronized (lock) {
             ValueObject.list.add("anyThing");
@@ -118,16 +112,17 @@ public class Subtract {
         super();
         this.lock = lock;
     }
+    
     public void subtract(){
         try {
             synchronized (lock) {
-                if(ValueObject.list.size()==0){
-                    System.out.println("wait begin ThreadName="+Thread.currentThread().getName());
+                if(ValueObject.list.size() == 0){
+                    System.out.println("wait begin ThreadName=" + Thread.currentThread().getName());
                     lock.wait();
-                    System.out.println("wait end ThreadName="+Thread.currentThread().getName());
+                    System.out.println("wait end ThreadName=" + Thread.currentThread().getName());
                 }
                 ValueObject.list.remove(0);
-                System.out.println("list size ="+ValueObject.list.size());
+                System.out.println("list size =" + ValueObject.list.size());
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -150,7 +145,6 @@ public class ThreadAdd extends Thread{
     public void run() {
         pAdd.add();
     }
-
 }
 ```
 
@@ -164,11 +158,11 @@ public class ThreadSubtract extends Thread{
         super();
         this.rSubtract = rSubtract;
     }
+
     @Override
     public void run() {
         rSubtract.subtract();
     }
-
 }
 ```
 
@@ -179,13 +173,16 @@ public static void main(String[] args) throws InterruptedException {
         String lock = new String("");
         Add add = new Add(lock);
         Subtract subtract = new Subtract(lock);
+
         ThreadSubtract subtractThread1 = new ThreadSubtract(subtract);
         subtractThread1.setName("subtractThread1");
         subtractThread1.start();
         ThreadSubtract subtractThread2 = new ThreadSubtract(subtract);
         subtractThread2.setName("subtractThread2");
         subtractThread2.start();
+        
         Thread.sleep(1000);
+        
         ThreadAdd addThread = new ThreadAdd(add);
         addThread.setName("addThread");
         addThread.start();
@@ -215,13 +212,13 @@ public static void main(String[] args) throws InterruptedException {
 public void subtract(){
         try {
             synchronized (lock) {
-                while(ValueObject.list.size()==0){
-                    System.out.println("wait begin ThreadName="+Thread.currentThread().getName());
+                while(ValueObject.list.size() == 0){
+                    System.out.println("wait begin ThreadName=" + Thread.currentThread().getName());
                     lock.wait();
-                    System.out.println("wait end ThreadName="+Thread.currentThread().getName());
+                    System.out.println("wait end ThreadName=" + Thread.currentThread().getName());
                 }
                 ValueObject.list.remove(0);
-                System.out.println("list size ="+ValueObject.list.size());
+                System.out.println("list size =" + ValueObject.list.size());
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -235,16 +232,12 @@ public void subtract(){
 
 关键字synchronized与wait\(\)和notify\(\)/notifyAll\(\)方法相结合可以实现等待/通知模式，类似ReentrantLock也可以实现同样的功能，但需要借助于Condition对象。
 
-关于Condition实现等待/通知就不详细介绍了，可以完全类比wait\(\)/notify\(\)，基本使用和注意事项完全一致。  
-就只简单介绍下类比情况：
+关于Condition实现等待/通知就不详细介绍了，可以完全类比wait\(\)/notify\(\)，基本使用和注意事项完全一致。  就只简单介绍下类比情况：
 
-**condition.await\(\)————&gt;lock.wait\(\)**
-
-**condition.await\(long time, TimeUnit unit\)————&gt;lock.wait\(long timeout\)**
-
-**condition.signal\(\)————&gt;lock.notify\(\)**
-
-**condition.signaAll\(\)————&gt;lock.notifyAll\(\)**
+- **condition.await\(\) -> lock.wait\(\)**
+- **condition.await\(long time, TimeUnit unit\) -> lock.wait\(long timeout\)**
+- **condition.signal\(\) -> lock.notify\(\)**
+- **condition.signaAll\(\) -> lock.notifyAll\(\)**
 
 **特殊之处：synchronized相当于整个ReentrantLock对象只有一个单一的Condition对象情况。而一个ReentrantLock却可以拥有多个Condition对象，来实现通知部分线程。**
 
@@ -276,7 +269,7 @@ public class Product {
                     //有值，不生产
                     lock.wait();
                 }
-                String  value = System.currentTimeMillis()+""+System.nanoTime();
+                String value = System.currentTimeMillis()+""+System.nanoTime();
                 System.out.println("set的值是："+value);
                 StringObject.value = value;
                 lock.notify();
@@ -362,7 +355,6 @@ public class ThreadConsumer extends Thread{
 
 ```java
 public class Test {
-
     public static void main(String[] args) throws InterruptedException {
         String lock = new String("");
         Product product = new Product(lock);
@@ -422,11 +414,9 @@ public class Product {
             condition.signalAll();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             lock.unlock();
         }
-
-
     }
 }
 ```
@@ -450,7 +440,7 @@ public class Consumer {
                     //没值，不进行消费
                     condition.await();
                 }
-                System.out.println("get的值是："+StringObject.value);
+                System.out.println("get的值是：" + StringObject.value);
                 StringObject.value = "";
                 condition.signalAll();
 
@@ -471,15 +461,14 @@ public class Consumer {
 public static void main(String[] args) throws InterruptedException {
         ReentrantLock lock = new ReentrantLock();
         Condition newCondition = lock.newCondition();
-        Product product = new Product(lock,newCondition);
-        Consumer consumer = new Consumer(lock,newCondition);
-        for(int i=0;i<3;i++){
+        Product product = new Product(lock, newCondition);
+        Consumer consumer = new Consumer(lock, newCondition);
+        for(int i=0; i<3; i++) {
             ThreadProduct pThread = new ThreadProduct(product);
             ThreadConsumer cThread = new ThreadConsumer(consumer);
             pThread.start();
             cThread.start();
         }
-
     }
 ```
 
@@ -492,7 +481,9 @@ public static void main(String[] args) throws InterruptedException {
 
 可见交替地进行get/set实现多生产/多消费模式。
 
-**注意：相比一生产一消费的模式，改动了两处。①signal\(\)--&gt;signalAll\(\)避免进入“假死”状态。②if\(\)判断--&gt;while\(\)循环，重新判断条件，避免逻辑混乱。**
+> 注意：相比一生产一消费的模式，改动了两处。
+> 1. signal\(\)-->signalAll\(\)避免进入“假死”状态。
+> 2. if\(\)判断-->while\(\)循环，重新判断条件，避免逻辑混乱。
 
-以上就是Java线程间通信的相关知识，以生产者/消费者模式为例，讲解线程间通信的使用以及注意事项。
+以上就是Java线程间通信的相关知识，以**生产者/消费者模式**为例，讲解线程间通信的使用以及注意事项。
 

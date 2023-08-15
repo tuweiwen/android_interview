@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
 
 以上代码我写的比较臃肿但是比较容易看明白：
 
-① 在Acitivity对应的布局中写上一个FramLayout控件，此空间的作用是当作Fragment的容器，Fragment通过FrameLayout显示在Acitivity里，这两个单词容易混淆，请注意
+① 在Acitivity对应的布局中写上一个FrameLayout控件，此空间的作用是当作Fragment的容器，Fragment通过FrameLayout显示在Acitivity里
 
 ② 准备好你的Fragment，然后再Activity中实例化，v4包的Fragment是通过getSupportFragmentManager()方法新建Fragment管理器对象，此处不讨论app包下的Fragment
 
@@ -464,9 +464,8 @@ FragmentOne.class文件
 
 ```java
 public class FragmentOne extends Fragment implements OnClickListener {  
-
-private Button mBtn;  
-
+    private Button mBtn;  
+    
     //设置按钮点击的回调
     public interface FOneBtnClickListener {  
         void onFOneBtnClick();  
@@ -488,7 +487,6 @@ private Button mBtn;
             ((FOneBtnClickListener) getActivity()).onFOneBtnClick();  
         }  
     }  
-
 }
 ```
 
@@ -500,7 +498,7 @@ FragmentTwo.class文件
 public class FragmentTwo extends Fragment implements OnClickListener {
 
     private Button mBtn ;  
-    private FTwoBtnClickListener fTwoBtnClickListener ;  
+    private FTwoBtnClickListener fTwoBtnClickListener;  
 
     public interface FTwoBtnClickListener {  
         void onFTwoBtnClick();  
@@ -591,11 +589,11 @@ public class MainActivity extends Activity implements FOneBtnClickListener,
 
 ### 7. 如何处理运行时配置发生变化
 
-- 在Activity的学习中我们都知道，当屏幕旋转时，是对屏幕上的视图进行了重新绘制。因为当屏幕发生旋转，Activity发生重新启动，默认的Activity中的Fragment也会跟着Activity重新创建，用脚趾头都明白...横屏和竖屏显示的不一样肯定是进行了重新绘制视图的操作。所以，不断的旋转就不断绘制，这是一种很耗费内存资源的操作，那么如何来进行优化？
+> 在Activity的学习中我们都知道，当屏幕旋转时，是对屏幕上的视图进行了重新绘制。因为当屏幕发生旋转，Activity发生重新启动，默认的Activity中的Fragment也会跟着Activity重新创建，用脚趾头都明白...横屏和竖屏显示的不一样肯定是进行了重新绘制视图的操作。所以，不断的旋转就不断绘制，这是一种很耗费内存资源的操作，那么如何来进行优化？
 
-  代码分析：
+代码分析：
 
-  Fragment的class文件
+Fragment的class文件
 
 ```java
 public class FragmentOne extends Fragment {

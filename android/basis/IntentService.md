@@ -67,8 +67,8 @@ public class myIntentService extends IntentService {
         super.onCreate();
     }
 
-    /*复写onStartCommand()方法*/
-    //默认实现将请求的Intent添加到工作队列里
+    /* 复写onStartCommand()方法 */
+    // 默认实现将请求的Intent添加到工作队列里
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("myIntentService", "onStartCommand");
@@ -140,15 +140,15 @@ protected void onCreate(Bundle savedInstanceState) {
 public void onCreate() {
     super.onCreate();
     // HandlerThread继承自Thread，内部封装了 Looper
-    //通过实例化HandlerThread新建线程并启动
-    //所以使用IntentService时不需要额外新建线程
+    // 通过实例化HandlerThread新建线程并启动
+    // 所以使用IntentService时不需要额外新建线程
     HandlerThread thread = new HandlerThread("IntentService[" + mName + "]");
     thread.start();
 
-    //获得工作线程的 Looper，并维护自己的工作队列
+    // 获得工作线程的 Looper，并维护自己的工作队列
     mServiceLooper = thread.getLooper();
-    //将上述获得Looper与新建的mServiceHandler进行绑定
-    //新建的Handler是属于工作线程的。
+    // 将上述获得Looper与新建的mServiceHandler进行绑定
+    // 新建的Handler是属于工作线程的。
     mServiceHandler = new ServiceHandler(mServiceLooper);
 }
 

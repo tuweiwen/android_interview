@@ -39,7 +39,7 @@ Arrays.asList( "a", "b", "d" ).forEach( e -> {
 } );
 ```
 
-Lambda表达式可以引用类成员和局部变量（会将这些变量隐式得转换成**final**的），例如下列两个代码块的效果完全相同：
+Lambda表达式可以引用类成员和局部变量（会将这些变量隐式的转换成**final**的），例如下列两个代码块的效果完全相同：
 
 ```java
 String separator = ",";
@@ -126,7 +126,7 @@ Java 8带来的另一个有趣的特性是在接口中可以定义静态方法�
 ```java
 private interface DefaulableFactory {
     // Interfaces now allow static methods
-    static Defaulable create( Supplier< Defaulable > supplier ) {
+    static Defaulable create(Supplier<Defaulable> supplier) {
         return supplier.get();
     }
 }
@@ -136,11 +136,11 @@ private interface DefaulableFactory {
 
 ```java
 public static void main( String[] args ) {
-    Defaulable defaulable = DefaulableFactory.create( DefaultableImpl::new );
-    System.out.println( defaulable.notRequired() );
+    Defaulable defaulable = DefaulableFactory.create(DefaultableImpl::new);
+    System.out.println(defaulable.notRequired());
 
-    defaulable = DefaulableFactory.create( OverridableImpl::new );
-    System.out.println( defaulable.notRequired() );
+    defaulable = DefaulableFactory.create(OverridableImpl::new);
+    System.out.println(defaulable.notRequired());
 }
 ```
 
@@ -151,7 +151,7 @@ Default implementation
 Overridden implementation
 ```
 
-由于JVM上的默认方法的实现在字节码层面提供了支持，因此效率非常高。默认方法允许在不打破现有继承体系的基础上改进接口。该特性在官方库中的应用是：给**java.util.Collection**接口添加新方法，如**stream()**、**parallelStream()**、**forEach()**和**removeIf()**等等。
+由于JVM上的默认方法的实现在字节码层面提供了支持，因此效率非常高。默认方法允许在不打破现有继承体系的基础上改进接口。该特性在官方库中的应用是：给**java.util.Collection**接口添加新方法，如**stream()**、**parallelStream()**、**forEach()** 和**removeIf()** 等等。
 
 尽管默认方法有这么多好处，但在实际开发中应该谨慎使用：在复杂的继承体系中，默认方法可能引起歧义和编译错误。如果你想了解更多细节，可以参考[官方文档](http://docs.oracle.com/javase/tutorial/java/IandI/defaultmethods.html)。
 
@@ -163,20 +163,20 @@ Overridden implementation
 
 ```java
 public static class Car {
-    public static Car create( final Supplier< Car > supplier ) {
+    public static Car create(final Supplier<Car> supplier) {
         return supplier.get();
     }              
 
-    public static void collide( final Car car ) {
-        System.out.println( "Collided " + car.toString() );
+    public static void collide(final Car car) {
+        System.out.println("Collided " + car.toString());
     }
 
-    public void follow( final Car another ) {
-        System.out.println( "Following the " + another.toString() );
+    public void follow(final Car another) {
+        System.out.println("Following the " + another.toString());
     }
 
     public void repair() {   
-        System.out.println( "Repaired " + this.toString() );
+        System.out.println("Repaired " + this.toString());
     }
 }
 ```
@@ -184,14 +184,14 @@ public static class Car {
 第一种方法引用的类型是**构造器引用**，语法是**Class::new**，或者更一般的形式：**Class<T>::new**。注意：这个构造器没有参数。
 
 ```java
-final Car car = Car.create( Car::new );
-final List< Car > cars = Arrays.asList( car );
+final Car car = Car.create(Car::new);
+final List<Car> cars = Arrays.asList( car );
 ```
 
 第二种方法引用的类型是静态方法引用，语法是**Class::static_method**。注意：这个方法接受一个Car类型的参数。
 
 ```java
-cars.forEach( Car::collide );
+cars.forEach(Car::collide);
 ```
 
 第三种方法引用的类型是某个类的成员方法的引用，语法是**Class::method**，注意，这个方法没有定义入参：

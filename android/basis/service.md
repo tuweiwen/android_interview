@@ -8,36 +8,19 @@ Service是Android中实现程序后台运行的解决方案，它非常适用于
 
 **按运行地点分类：**  
 
-
 ![](http://upload-images.jianshu.io/upload_images/3985563-af63266f00ae1fbc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
-
   
 **按运行类型分类：**  
 
-
 ![](http://upload-images.jianshu.io/upload_images/3985563-87972eef7c1b435a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
-
   
 **按使用方式分类：**  
 
-
 ![](http://upload-images.jianshu.io/upload_images/3985563-2c6f9875b470540a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
 
 ### 三、Service生命周期
 
 ![](http://upload-images.jianshu.io/upload_images/3985563-85614addbbec7a0c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
 
 **OnCreate\(\)**  
 系统在service第一次创建时执行此方法，来执行**只运行一次的**初始化工作。如果service已经运行，这个方法不会被调用。
@@ -107,20 +90,19 @@ public class BackService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         System.out.println("onBind");
+        // 如果Service不允许被绑定，可以返回null
         return null;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //执行耗时操作
-
         mThread = new Thread() {
             @Override
             public void run() {
@@ -130,7 +112,7 @@ public class BackService extends Service {
                         if (this.isInterrupted()) {
                             throw new InterruptedException();
                         }
-                        //耗时操作。
+                        //耗时操作
                         System.out.println("执行耗时操作");
                     }
                 } catch (InterruptedException e) {
@@ -182,11 +164,9 @@ android:process="remote"
 
 ```java
 public class BackService extends Service {
-
     @Override
     public void onCreate() {
         super.onCreate();
-
     }
 
     @Nullable
@@ -195,16 +175,17 @@ public class BackService extends Service {
         //返回MyBinder对象
         return new MyBinder();
     }
+
     //需要返回给前台的Binder类
     class MyBinder extends Binder {
         public void showTip(){
             System.out.println("我是来此服务的提示");
         }
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-
     }
 }
 ```
@@ -213,7 +194,7 @@ public class BackService extends Service {
 通过以下方式绑定服务：
 
 ```java
-bindService(mIntent,con,BIND_AUTO_CREATE);
+bindService(mIntent, con, BIND_AUTO_CREATE);
 ```
 
 其中第二个参数：
@@ -274,7 +255,7 @@ public class ForeService extends Service{
                 .setContentText("2017-2-27")
                 .setContentText("您有一条未读短信...");
         //创建点跳转的Intent(这个跳转是跳转到通知详情页)
-        Intent intent = new Intent(this,NotificationShow.class);
+        Intent intent = new Intent(this, NotificationShow.class);
         //创建通知详情页的栈
         TaskStackBuilder stackBulider = TaskStackBuilder.create(this);
         //为其添加父栈 当从通知详情页回退时，将退到添加的父栈中
@@ -357,6 +338,3 @@ mBuilder.setContentIntent(pendingIntent);
 这里我让它的parentActivity为MainActivity，也就是说在NotificationShow这个界面点击回退时，会跳转到MainActivity这个界面，而不是像上面一样直接回到了home菜单。
 
 **注意：通过 stopForeground\(\)方法可以取消通知，即将前台服务降为后台服务。此时服务依然没有停止。通过stopService\(\)可以把前台服务停止。**
-
-以上是关于Service的内容。
-

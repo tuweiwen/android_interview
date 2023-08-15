@@ -83,9 +83,9 @@
 ```java
 // 边的结构体
 private static class EData {
-    char start; // 边的起点
-    char end;   // 边的终点
-    int weight; // 边的权重
+    char start;  // 边的起点
+    char end;    // 边的终点
+    int  weight; // 边的权重
 
     public EData(char start, char end, int weight) {
         this.start = start;
@@ -97,14 +97,12 @@ private static class EData {
 
 EData是邻接矩阵边对应的结构体。
 
-```
+```java
 public class MatrixUDG {
-
     private int mEdgNum;        // 边的数量
     private char[] mVexs;       // 顶点集合
     private int[][] mMatrix;    // 邻接矩阵
     private static final int INF = Integer.MAX_VALUE;   // 最大值
-
     ...
 }
 ```
